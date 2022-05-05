@@ -1,5 +1,4 @@
 # Final Project
-
 ### Final Project Guideline:  
 [Google Doc Link](https://docs.google.com/document/d/1SU8x_TNHdjzocSAzvC8QoXhl9OhHDEsWQrIHwncAQSI/edit?usp=sharing) 
 
