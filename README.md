@@ -1,6 +1,4 @@
----------------
 # Final Project
----------------
 
 ### Final Project Guideline:  
 [Google Doc Link](https://docs.google.com/document/d/1SU8x_TNHdjzocSAzvC8QoXhl9OhHDEsWQrIHwncAQSI/edit?usp=sharing) 
@@ -18,9 +16,8 @@
 - Teris and secure message: [Drive Link](https://drive.google.com/file/d/16kr_c9RbebGZiefRRDeyR3boGF0b6DNk/view?usp=sharing) 
 - Online game - Pong: [Drive Link](https://drive.google.com/file/d/14nb__fM5pX4BG5gZwVJYo0amWJdxDBIM/view?usp=sharing) 
 - Secure message and GUI ( a project of a team of three): [Drive Link](https://drive.google.com/file/d/1GXiGjgzgAslYVLCWDHSJI7crEgkO5-uV/view?usp=sharing, https://drive.google.com/file/d/19VRoLFmyIIF-P8wmsN5_Z2thAE6VLIpO/view?usp=sharing)
--------------------------------
+
 ## Graphic User Interface (GUI) 
--------------------------------
 
 ### Current State
 Currently, the chat system is run from the terminal command line. All input and output are only found from the plain terminal window. You might want to add a user interface to enhance the chatting experience. 
@@ -34,9 +31,8 @@ is that you need to make a GUI that can take and display messages for the user. 
 ### Extras
 Besides, you should try to integrate your work on the selective topic with the GUI. For example, if your selective topic is Secure Messaging, you can use the encryption algorithms to transmit the messages behind the GUI. Or, if your selective topic is Online Gaming, you may add a button in the GUI that can start the game you designed.
 
--------------------
 ## Secure Messaging 
--------------------
+
 ### Introduction
 Turing and his friends built one of the first computers to crack the Enigma code. Every technology, by itself, stands as a double-edged sword. As a user, you have the right to protect your transactions against eavesdropping. 
 But the question is: how? 
@@ -54,10 +50,7 @@ The field of computer security (and a related field, data privacy) is a vast and
 * You will need to implement a shared key protocol as well as a simple encryption/decryption algorithm for the client-side, and make this work!
 * Reference: MacCormick, 9 algorithms, Chapter 4. 
 
-
------------------
 ## Grading Policy
------------------
 
 The work will be evaluated on the following criteria:
 -	Compulsory topic: 50% 
