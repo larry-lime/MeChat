@@ -14,7 +14,7 @@
 ## Gallery: (works of students in previous semesters)
 - Teris and secure message: [Drive Link](https://drive.google.com/file/d/16kr_c9RbebGZiefRRDeyR3boGF0b6DNk/view?usp=sharing) 
 - Online game - Pong: [Drive Link](https://drive.google.com/file/d/14nb__fM5pX4BG5gZwVJYo0amWJdxDBIM/view?usp=sharing) 
-- Secure message and GUI ( a project of a team of three): [Drive Link](https://drive.google.com/file/d/1GXiGjgzgAslYVLCWDHSJI7crEgkO5-uV/view?usp=sharing, https://drive.google.com/file/d/19VRoLFmyIIF-P8wmsN5_Z2thAE6VLIpO/view?usp=sharing)
+- Secure message and GUI ( a project of a team of three): [Video 1](https://drive.google.com/file/d/1GXiGjgzgAslYVLCWDHSJI7crEgkO5-uV/view?usp=sharing) [Video 2](https://drive.google.com/file/d/19VRoLFmyIIF-P8wmsN5_Z2thAE6VLIpO/view?usp=sharing)
 
 ## Graphic User Interface (GUI) 
 
