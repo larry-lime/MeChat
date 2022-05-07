@@ -43,6 +43,7 @@ def mysend(s, msg):
     #append size to message and send it
     msg = ('0' * SIZE_SPEC + str(len(msg)))[-SIZE_SPEC:] + str(msg)
     msg = msg.encode()
+    # print("msg encode:",msg)
     total_sent = 0
     while total_sent < len(msg) :
         # print('s',type(s))
