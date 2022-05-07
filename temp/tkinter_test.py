@@ -7,6 +7,7 @@ from tkinter import simpledialog
 class GUI:
     def __init__(self):
         self.gui_done = False
+        # Returns a string
         self.nickname = simpledialog.askstring("Nickname", "Enter a nickname:")
 
     def gui_loop(self):
@@ -40,9 +41,11 @@ class GUI:
     def write(self):
         message = f"{self.nickname}: {self.input_area.get('1.0', tkinter.END)}"
         print(message)
+        # Right here is when I need to send the message to the server
         # self.sock.send(message.encode('utf-8'))
         self.input_area.delete('1.0', 'end')
 
+    # This kills the GUI window when I press the X button
     def stop(self):
         self.running = False
         self.win.destroy()
@@ -59,7 +62,6 @@ class GUI:
                 else:
                     if self.gui_done:
                         self.text_area.config(state='normal')
-                        # self.text_area.insert(tkinter.END, message)
                         self.text_area.insert('end', message)
                         self.text_area.yview('end')
                         self.text_area.config(state='disabled')
