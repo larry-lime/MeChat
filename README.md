@@ -1,5 +1,5 @@
 # Final Project
-### Final Project Guideline:  
+## Final Project Guideline:  
 [Google Doc Link](https://docs.google.com/document/d/1SU8x_TNHdjzocSAzvC8QoXhl9OhHDEsWQrIHwncAQSI/edit?usp=sharing) 
 
 ## Schedule:
@@ -37,7 +37,7 @@ Turing and his friends built one of the first computers to crack the Enigma code
 But the question is: how? 
 
 ### Assignment
-The intuitive idea is, of course, `to scramble your message`, a process that we call encryption. `You want your friend to read the clear message, so you will need decryption as well.` This takes the form of an agreement between you and your friend before you send your scrambled message. 
+The intuitive idea is, of course, to scramble your message, a process that we call encryption. You want your friend to read the clear message, so you will need decryption as well. This takes the form of an agreement between you and your friend before you send your scrambled message. 
 
 ### Information
 On the Internet, everything said is in the open. So there is no hideaway in which you and your friend can meet. So how is it possible to establish such an agreement, and then communicate? 
