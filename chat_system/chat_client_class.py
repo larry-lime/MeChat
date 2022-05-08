@@ -7,9 +7,9 @@ from chat_utils import *
 import client_state_machine as csm
 import threading
 # GUI
-# import tkinter
-# import tkinter.scrolledtext
-# from tkinter import simpledialog
+import tkinter as tk
+import tkinter.scrolledtext as tks
+from tkinter import simpledialog
 
 class Client:
     def __init__(self, args):
@@ -75,12 +75,12 @@ class Client:
             print(self.system_msg)
             self.system_msg = ''
 
+    # Integrate this with GUI
     def login(self):
         my_msg, peer_msg = self.get_msgs()
         if len(my_msg) > 0:
             self.name = my_msg
             msg = json.dumps({"action":"login", "name":self.name})
-            # print('bug?',type(msg))
             self.send(msg)
             response = json.loads(self.recv())
             if response["status"] == 'ok':
@@ -163,10 +163,20 @@ class Client:
     def print_instructions(self):
         self.system_msg += menu
 
+    def gui_login(self):
+        self.running = True
+        self.win = tk.Tk()
+        self.win.configure(bg="lightgray")
+
+        self.chat_label = tk.Label(self.win, text="Chat", bg="lightgray")
+        self.chat_label.configure(font=("Arial", 12))
+        self.chat_label.pack(padx=20, pady=5)
+
     def run_chat(self):
         self.init_chat()
         # Start GUI with terminal chat
         # self.gui_loop()
+        # I should start the GUI login loop here
         self.system_msg += 'Welcome to ICS chat\n'
         self.system_msg += 'Please enter your name: '
         self.output()
@@ -180,6 +190,7 @@ class Client:
             self.output()
             time.sleep(CHAT_WAIT)
         self.quit()
+
 
 #==============================================================================
 # main processing loop

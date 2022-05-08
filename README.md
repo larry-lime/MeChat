@@ -68,3 +68,5 @@ The work will be evaluated on the following criteria:
 # Useful Link
 https://www.youtube.com/watch?v=hs7GLsHQCPQ
 
+# Notes
+I should add the GUI layer over the existing chat system. I should not change any of the existing functions. Instead I should just have the GUI interact with the chat system
