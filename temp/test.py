@@ -2,7 +2,7 @@
 import tkinter as tk
 from tkinter import ttk
 import tkinter.scrolledtext as tks
-from tkinter.messagebox import showinfo
+# from tkinter.messagebox import showinfo
 from tkinter import simpledialog
 
 class classic_GUI:
@@ -77,9 +77,8 @@ class classic_GUI:
 class modern_GUI:
     def __init__(self):
         self.username = ""
-        self.running = False
+        self.running = True
         self.gui_done = False
-        pass
 
     def gui_login(self):
 
@@ -133,7 +132,6 @@ class modern_GUI:
 
     def gui_chat(self):
 
-        self.running = True
         # Tkinter Window
         self.root = tk.Tk()
         self.root.geometry("300x600")
@@ -169,10 +167,7 @@ class modern_GUI:
             # padx=20,
             pady=5
         )
-        """
-        When I implement this make sure to delete this
-        """
-        # self.text_area.config(state='disabled')
+        self.text_area.config(state='disabled')
 
         # Message Box
         self.user_box = ttk.Entry(
@@ -204,7 +199,7 @@ class modern_GUI:
 
     def login_action(self):
         self.username = self.user_box.get()
-        self.stop()
+        self.root.destroy()
     
     def write_bind(self, event):
         self.write()
@@ -215,28 +210,15 @@ class modern_GUI:
         Comment out the insert code when I implement it
         """
         self.message = f"{self.username}: {self.msg.get()}\n"
-        self.text_area.insert('end', self.message)
-        self.text_area.yview('end')
+        # self.text_area.insert('end', self.message)
+        # self.text_area.yview('end')
         self.user_box.delete(0, 'end')
 
     def recieve(self):
-        while self.running:
-            try: 
-                # message = recieve socket message
-                message = "PLACEHOLDER"
-                if self.gui_done == True:
-                    self.text_area.config(state='normal')
-                    self.text_area.insert('end', message)
-                    self.text_area.yview('end')
-                    self.text_area.config(state='disabled')
-            except:
-                print('ERROR')
-                break
-    # This kills the GUI window when I press the X button
-    def stop(self):
-        self.running = False
-        self.root.destroy()
-        # exit(0)
+        self.text_area.config(state='normal')
+        self.text_area.insert('end', self.message)
+        self.text_area.yview('end')
+        self.text_area.config(state='disabled')
 
 if __name__ == "__main__":
     # gui = classic_GUI()
