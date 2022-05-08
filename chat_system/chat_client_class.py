@@ -8,11 +8,13 @@ import client_state_machine as csm
 import threading
 # GUI
 import tkinter as tk
+from tkinter import ttk
 import tkinter.scrolledtext as tks
 from tkinter import simpledialog
 
 class Client:
     def __init__(self, args):
+        # This is the user of the system
         self.peer = ''
         self.console_input = []
         self.state = S_OFFLINE
@@ -20,14 +22,10 @@ class Client:
         self.local_msg = ''
         self.peer_msg = ''
         self.args = args
-        # self.nickname = simpledialog.askstring("Nickname", "Enter a nickname:")
-        # GUI Flag Var
-        self.gui_done = False
+        # GUI Vars
+        self.username = ""
         self.running = True
-
-        # GUI Programming
-        # msg = tkinter.Tk()
-        # msg.withdraw()
+        self.gui_done = False
 
     def quit(self):
         self.socket.shutdown(socket.SHUT_RDWR)
@@ -41,12 +39,13 @@ class Client:
         svr = SERVER if self.args.d == None else (self.args.d, CHAT_PORT)
         self.socket.connect(svr)
         self.sm = csm.ClientSM(self.socket)
-        reading_thread = threading.Thread(target=self.read_input)
+        # reading_thread = threading.Thread(target=self.read_input)
+        reading_thread = threading.Thread(target=self.gui_loop)
         reading_thread.daemon = True
         reading_thread.start()
 
         # GUI Thread
-        # gui_thread = threading.Thread(target=self.gui_loop)
+        # gui_thread = threading.Thread(target=self.gui_login)
         # gui_thread.start()
 
     def shutdown_chat(self):
@@ -80,7 +79,10 @@ class Client:
         my_msg, peer_msg = self.get_msgs()
         if len(my_msg) > 0:
             self.name = my_msg
+            # Print name
+            # print('this is my name',self.name)
             msg = json.dumps({"action":"login", "name":self.name})
+            # This sends the message to the server
             self.send(msg)
             response = json.loads(self.recv())
             if response["status"] == 'ok':
@@ -95,87 +97,160 @@ class Client:
         else:               # fix: dup is only one of the reasons
            return(False)
 
+    def gui_login(self):
+        # Tkinter Window
+        self.root = tk.Tk()
+        self.root.geometry("300x150")
+        self.root.resizable(False, False)
+        self.root.title("Chat Login")
+
+        # Login String Variables
+        self.username = tk.StringVar()
+
+        # Sign in frame
+        self.signin = ttk.Frame(self.root)
+        self.signin.pack(
+            padx=15,
+            pady=10,
+            fill='x',
+            expand=True
+        )
+
+        # Username 
+        self.user_label = ttk.Label(
+            self.signin,
+            text="Username:")
+        self.user_label.pack(
+            fill='x',
+            expand=True)
+
+        self.user_box = ttk.Entry(
+            self.signin,
+            textvariable=self.username)
+        self.user_box.pack(
+            fill='x',
+            expand=True)
+
+        self.user_box.bind('<Return>', self.login_bind)
+
+        self.user_box.focus()
+
+        # Login Button
+        self.button = ttk.Button(
+            self.signin,
+            # text="Login",
+            text="SEND",
+            command=self.login_action
+        )
+
+        self.button.pack(fill='x', expand=True, pady=10)
+
+        self.root.mainloop()
+        print('LOGIN DONE')
+
+    def gui_chat(self):
+
+        # Tkinter Window
+        self.root = tk.Tk()
+        self.root.geometry("300x600")
+        self.root.resizable(False, False)
+        self.root.title("Chat Windows")
+
+        # Chat String Variables
+        self.msg = tk.StringVar()
+
+        # Sign in frame
+        self.signin = ttk.Frame(self.root)
+        self.signin.pack(
+            padx=15,
+            pady=10,
+            fill='x',
+            expand=True
+        )
+
+        self.user_label = ttk.Label(
+            self.signin,
+            text="Chat Window")
+
+        self.user_label.pack(
+            fill='x',
+            # ipadx=20,
+            # ipady=20,
+            expand=True)
+
+        # Chat Window
+        self.text_area = tks.ScrolledText(self.signin)
+        self.text_area.pack(
+            fill='x',
+            # padx=20,
+            pady=5
+        )
+        # I don't think I actually need to disable this
+        # self.text_area.config(state='disabled')
+
+        # Message Box
+        self.user_box = ttk.Entry(
+            self.signin,
+            textvariable=self.msg)
+        self.user_box.pack(
+            fill='x',
+            expand=True)
+
+        self.user_box.bind('<Return>', self.write_bind)
+
+        self.user_box.focus()
+
+        # Tkinter Button 
+        button_icon = tk.PhotoImage(file='..\\temp\\assets\\send_icon_smaller.png')
+        self.button = ttk.Button(
+            self.signin,
+            image=button_icon,
+            text="SEND",
+            compound=tk.RIGHT,
+            command=self.write)
+
+        self.button.pack(fill='x', expand=True, pady=10)
+
+        self.root.mainloop()
+
+    def gui_loop(self):
+        self.gui_login()
+        self.gui_chat()
+
+    def login_bind(self, event):
+        self.login_action()
+
+    def login_action(self):
+        text = self.user_box.get()
+        self.console_input.append(text) # no need for lock, append is thread safe
+        self.root.destroy()
+
+    def write_bind(self, event):
+        self.write()
+
+    def write(self):
+        text = self.user_box.get()
+        self.console_input.append(text) # no need for lock, append is thread safe
+        self.message = f"{self.username}: {self.msg.get()}\n"
+        self.text_area.insert('end', self.message)
+        self.text_area.yview('end')
+        self.user_box.delete(0, 'end')
 
     def read_input(self):
         while True:
-            # I think that I may need to add the input GUI element here. I'm not sure
+            # This is the thing that reads the input from the user
             text = sys.stdin.readline()[:-1]
+            print('LOGGED IN STATE', self.state)
+            print('TRIGGERED')
             self.console_input.append(text) # no need for lock, append is thread safe
-
-    # def gui_loop(self):
-        # self.win = tkinter.Tk()
-        # self.win.configure(bg="lightgray")
-
-        # self.chat_label = tkinter.Label(self.win, text="Chat", bg="lightgray")
-        # self.chat_label.configure(font=("Arial", 12))
-        # self.chat_label.pack(padx=20, pady=5)
-
-        # self.text_area = tkinter.scrolledtext.ScrolledText(self.win)
-        # self.text_area.pack(padx=20, pady=5)
-        # self.text_area.config(state='disabled')
-
-        # self.msg_label = tkinter.Label(self.win, text="Message", bg="lightgray")
-        # self.msg_label.configure(font=("Arial", 12))
-        # self.msg_label.pack(padx=20, pady=5)
-
-        # self.input_area = tkinter.Text(self.win, height=3, width=30)
-        # self.input_area.pack(padx=20, pady=5)
-
-        # self.send_button = tkinter.Button(self.win, text="Send", command=self.write)
-        # self.send_button.config(font=("Arial", 12))
-        # self.send_button.pack(padx=20, pady=5)
-
-        # self.gui_done = True
-        # self.win.protocol("WM_DELETE_WINDOW", self.stop)
-        # self.win.mainloop()
-
-
-    # def write(self):
-        # message = f"{self.nickname}: {self.input_area.get('1.0', tkinter.END)}"
-        # print(message)
-        # # Right here is when I need to send the message to the server
-        # # self.sock.send(message.encode('utf-8'))
-        # self.input_area.delete('1.0', 'end')
-
-    # # This kills the GUI window when I press the X button
-    # def stop(self):
-        # self.running = False
-        # self.win.destroy()
-        # exit(0)
-
-    # def recieve(self):
-        # while self.running:
-            # try: 
-                # # message = self.sock.recv(1024)
-                # message = "test"
-                # if message == "NICK":
-                    # # self.sock.send(self.nickname.encode('utf-8'))
-                    # pass
-                # else:
-                    # if self.gui_done:
-                        # self.text_area.config(state='normal')
-                        # self.text_area.insert('end', message)
-                        # self.text_area.yview('end')
-                        # self.text_area.config(state='disabled')
-            # except:
-                # break
 
     def print_instructions(self):
         self.system_msg += menu
 
-    def gui_login(self):
-        self.running = True
-        self.win = tk.Tk()
-        self.win.configure(bg="lightgray")
-
-        self.chat_label = tk.Label(self.win, text="Chat", bg="lightgray")
-        self.chat_label.configure(font=("Arial", 12))
-        self.chat_label.pack(padx=20, pady=5)
-
     def run_chat(self):
         self.init_chat()
         # Start GUI with terminal chat
-        # self.gui_loop()
+        # self.gui_login()
         # I should start the GUI login loop here
         self.system_msg += 'Welcome to ICS chat\n'
         self.system_msg += 'Please enter your name: '
