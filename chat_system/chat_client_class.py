@@ -10,7 +10,6 @@ import threading
 import tkinter as tk
 from tkinter import ttk
 import tkinter.scrolledtext as tks
-from tkinter import simpledialog
 
 class Client:
     def __init__(self, args):
@@ -24,7 +23,7 @@ class Client:
         self.args = args
         # GUI Vars
         self.username = ""
-        self.running = True
+        self.running = False
         self.gui_done = False
 
     def quit(self):
@@ -68,11 +67,7 @@ class Client:
             peer_msg = self.recv()
         return my_msg, peer_msg
 
-    def output(self):
-        if len(self.system_msg) > 0:
-            # I think that this is where I should implement the GUI
-            print(self.system_msg)
-            self.system_msg = ''
+
 
     # Integrate this with GUI
     def login(self):
@@ -146,13 +141,14 @@ class Client:
         self.button.pack(fill='x', expand=True, pady=10)
 
         self.root.mainloop()
-        print('LOGIN DONE')
+        # print('LOGIN DONE')
 
     def gui_chat(self):
+        self.running = True
 
         # Tkinter Window
         self.root = tk.Tk()
-        self.root.geometry("300x600")
+        self.root.geometry("600x800")
         self.root.resizable(False, False)
         self.root.title("Chat Windows")
 
@@ -168,11 +164,30 @@ class Client:
             expand=True
         )
 
-        self.user_label = ttk.Label(
+        self.chat_label = ttk.Label(
             self.signin,
             text="Chat Window")
 
-        self.user_label.pack(
+        self.chat_label.pack(
+            fill='x',
+            # ipadx=20,
+            # ipady=20,
+            expand=True)
+
+        menu = "\n++++ Choose one of the following commands\n \
+                time: calendar time in the system\n \
+                who: to find out who else are there\n \
+                c _peer_: to connect to the _peer_ and chat\n \
+                ? _term_: to search your chat logs where _term_ appears\n \
+                p _#_: to get number <#> sonnet\n \
+                q: to leave the chat system\n\n"
+
+        self.chat_instructions = ttk.Label(
+            self.signin,
+            text=menu
+        )
+
+        self.chat_instructions.pack(
             fill='x',
             # ipadx=20,
             # ipady=20,
@@ -231,11 +246,21 @@ class Client:
     def write(self):
         text = self.user_box.get()
         self.console_input.append(text) # no need for lock, append is thread safe
-        self.message = f"{self.username}: {self.msg.get()}\n"
-        self.text_area.insert('end', self.message)
-        self.text_area.yview('end')
+        # self.message = f"{self.username}: {self.msg.get()}\n"
+        # self.text_area.insert('end', self.message)
+        # self.text_area.yview('end')
         self.user_box.delete(0, 'end')
 
+    def output(self):
+        if len(self.system_msg) > 0:
+            # I think that this is where I should implement the GUI
+            print(self.system_msg)
+            # ---GUI STUFF---
+            if self.running:
+                self.text_area.insert('end', self.system_msg)
+                self.text_area.yview('end')
+            # ---GUI STUFF---
+            self.system_msg = ''
     def read_input(self):
         while True:
             # This is the thing that reads the input from the user
