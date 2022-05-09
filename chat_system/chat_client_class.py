@@ -48,6 +48,8 @@ class Client:
         # gui_thread.start()
 
     def shutdown_chat(self):
+        # print("SHUTDOWN")
+        self.running = False
         return
 
     def send(self, msg):
@@ -66,8 +68,6 @@ class Client:
         if self.socket in read:
             peer_msg = self.recv()
         return my_msg, peer_msg
-
-
 
     # Integrate this with GUI
     def login(self):
@@ -144,7 +144,6 @@ class Client:
         # print('LOGIN DONE')
 
     def gui_chat(self):
-        self.running = True
 
         # Tkinter Window
         self.root = tk.Tk()
@@ -226,6 +225,7 @@ class Client:
 
         self.button.pack(fill='x', expand=True, pady=10)
 
+        self.running = True
         self.root.mainloop()
 
     def gui_loop(self):
@@ -246,9 +246,14 @@ class Client:
     def write(self):
         text = self.user_box.get()
         self.console_input.append(text) # no need for lock, append is thread safe
-        # self.message = f"{self.username}: {self.msg.get()}\n"
-        # self.text_area.insert('end', self.message)
-        # self.text_area.yview('end')
+        # print("STATE",self.state)
+        if self.sm.get_state() == S_CHATTING:
+            self.message = f"[{self.name}]{self.msg.get()}\n"
+        # if self.state == S_LOGGEDIN
+        else:
+            self.message = f"{self.msg.get()}\n"
+        self.text_area.insert('end', self.message)
+        self.text_area.yview('end')
         self.user_box.delete(0, 'end')
 
     def output(self):
@@ -256,11 +261,13 @@ class Client:
             # I think that this is where I should implement the GUI
             print(self.system_msg)
             # ---GUI STUFF---
+            # if self.state == S_LOGGEDIN:
             if self.running:
-                self.text_area.insert('end', self.system_msg)
+                self.text_area.insert('end', self.system_msg + '\n')
                 self.text_area.yview('end')
             # ---GUI STUFF---
             self.system_msg = ''
+
     def read_input(self):
         while True:
             # This is the thing that reads the input from the user
@@ -287,6 +294,7 @@ class Client:
         # This is how the actual chat room operates
         while self.sm.get_state() != S_OFFLINE:
             self.proc()
+            # print(self.sm.get_state())
             self.output()
             time.sleep(CHAT_WAIT)
         self.quit()
