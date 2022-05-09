@@ -5,7 +5,6 @@ import time
 #CHAT_IP = '127.0.0.1'
 # CHAT_IP = socket.gethostbyname(socket.gethostname())
 CHAT_IP = "localhost"
-
 CHAT_PORT = 9999
 SERVER = (CHAT_IP, CHAT_PORT)
 
@@ -56,8 +55,8 @@ def myrecv(s):
     #receive size first
     size = ''
     while len(size) < SIZE_SPEC:
-        # text = s.recv(SIZE_SPEC - len(size)).decode()
-        text = s.recv(1024).decode()
+        text = s.recv(SIZE_SPEC - len(size)).decode()
+        # text = s.recv(1024).decode()
         if not text:
             print('disconnected')
             return('')
@@ -66,8 +65,8 @@ def myrecv(s):
     #now receive message
     msg = ''
     while len(msg) < size:
-        # text = s.recv(size-len(msg)).decode()
-        text = s.recv(1024).decode()
+        text = s.recv(size-len(msg)).decode()
+        # text = s.recv(1024).decode()
         if text == b'':
             print('disconnected')
             break
