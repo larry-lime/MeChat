@@ -4,15 +4,18 @@
 
 ## GUI Elements To-Do
 - [ ] Make it so that people who connect to my website are able to chat with me
+    - [ ] Go onto another git branch for this
     - [ ] This will require socket programming skills
 - [ ] Upgrade the Design the UI/UX
-    - [ ] Add to
+    - [ ] Add the user's name at the top of the window
+    - [ ] Add buttons to replace typed in user functions
 - [ ] Add login features
     - [ ] Password protected message history
     - [ ] Index system that stores messages with prior friends
 - [X] Fixed the state issue
 - [X] Make sure that your messages show up when I text
 - [X] Fix the problem of the client crashing when disconnecting and then reconnecting
+- [ ] Add the basic GUI interface
 
 ## Schedule:
 - Team Formation (please find your team by April 30)
