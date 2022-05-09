@@ -4,9 +4,8 @@ import time
 # use local loop back address by default
 #CHAT_IP = '127.0.0.1'
 # CHAT_IP = socket.gethostbyname(socket.gethostname())
-CHAT_IP = socket.gethostbyname(socket.gethostname())
-
-CHAT_PORT = 1112
+CHAT_IP = "localhost"
+CHAT_PORT = 9999
 SERVER = (CHAT_IP, CHAT_PORT)
 
 menu = "\n++++ Choose one of the following commands\n \
@@ -43,10 +42,8 @@ def mysend(s, msg):
     #append size to message and send it
     msg = ('0' * SIZE_SPEC + str(len(msg)))[-SIZE_SPEC:] + str(msg)
     msg = msg.encode()
-    # print("msg encode:",msg)
     total_sent = 0
     while total_sent < len(msg) :
-        # print('s',type(s))
         sent = s.send(msg[total_sent:])
         if sent==0:
             print('server disconnected')
@@ -71,7 +68,6 @@ def myrecv(s):
             print('disconnected')
             break
         msg += text
-    #print ('received '+message)
     return (msg)
 
 def text_proc(text, user):

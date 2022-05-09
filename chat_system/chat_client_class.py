@@ -35,17 +35,14 @@ class Client:
 
     def init_chat(self):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM )
-        svr = SERVER if self.args.d == None else (self.args.d, CHAT_PORT)
-        self.socket.connect(svr)
+        # svr = SERVER if self.args.d == None else (self.args.d, CHAT_PORT)
+        # self.socket.connect(svr)
+        self.socket.connect(('0.tcp.jp.ngrok.io', 12856))
         self.sm = csm.ClientSM(self.socket)
         # reading_thread = threading.Thread(target=self.read_input)
         reading_thread = threading.Thread(target=self.gui_loop)
         reading_thread.daemon = True
         reading_thread.start()
-
-        # GUI Thread
-        # gui_thread = threading.Thread(target=self.gui_login)
-        # gui_thread.start()
 
     def shutdown_chat(self):
         # print("SHUTDOWN")
@@ -74,17 +71,13 @@ class Client:
         my_msg, peer_msg = self.get_msgs()
         if len(my_msg) > 0:
             self.name = my_msg
-            # Print name
-            # print('this is my name',self.name)
             msg = json.dumps({"action":"login", "name":self.name})
-            # This sends the message to the server
             self.send(msg)
             response = json.loads(self.recv())
             if response["status"] == 'ok':
                 self.state = S_LOGGEDIN
                 self.sm.set_state(S_LOGGEDIN)
                 self.sm.set_myname(self.name)
-                # Don't print the instructions lol
                 # self.print_instructions()
                 return (True)
             elif response["status"] == 'duplicate':
@@ -255,15 +248,6 @@ class Client:
     def exit_chat(self):
         text = 'q'
         self.console_input.append(text) # no need for lock, append is thread safe
-        # print("STATE",self.state)
-        # if self.sm.get_state() == S_CHATTING:
-            # self.message = f"[{self.name}]{self.msg.get()}\n"
-        # if self.state == S_LOGGEDIN
-        # else:
-            # self.message = f"{self.msg.get()}\n"
-        # self.text_area.insert('end', self.message)
-        # self.text_area.yview('end')
-        # self.user_box.delete(0, 'end')
 
     def write(self):
         text = self.user_box.get()
@@ -303,9 +287,6 @@ class Client:
 
     def run_chat(self):
         self.init_chat()
-        # Start GUI with terminal chat
-        # self.gui_login()
-        # I should start the GUI login loop here
         self.system_msg += 'Welcome to ICS chat\n'
         self.system_msg += 'Please enter your name: '
         self.output()
@@ -313,10 +294,8 @@ class Client:
             self.output()
         self.system_msg += 'Welcome, ' + self.get_name() + '!'
         self.output()
-        # This is how the actual chat room operates
         while self.sm.get_state() != S_OFFLINE:
             self.proc()
-            # print(self.sm.get_state())
             self.output()
             time.sleep(CHAT_WAIT)
         self.quit()
@@ -327,6 +306,4 @@ class Client:
 #==============================================================================
     def proc(self):
         my_msg, peer_msg = self.get_msgs()
-        # print('my_msg:',my_msg)
-        # print('peer_msg:',peer_msg)
         self.system_msg += self.sm.proc(my_msg, peer_msg)

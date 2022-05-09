@@ -26,7 +26,7 @@ class Server:
         # start server
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.bind(SERVER)
-        self.server.listen(5)
+        self.server.listen()
         self.all_sockets.append(self.server)
         # initialize past chat indices
         self.indices = {}
