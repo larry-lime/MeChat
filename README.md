@@ -1,6 +1,18 @@
 # Final Project
-## Final Project Guideline:  
+### Final Project Guideline:  
 [Google Doc Link](https://docs.google.com/document/d/1SU8x_TNHdjzocSAzvC8QoXhl9OhHDEsWQrIHwncAQSI/edit?usp=sharing) 
+
+## GUI Elements To-Do
+- [ ] Make it so that people who connect to my website are able to chat with me
+    - [ ] This will require socket programming skills
+- [ ] Upgrade the Design the UI/UX
+    - [ ] Add to
+- [ ] Add login features
+    - [ ] Password protected message history
+    - [ ] Index system that stores messages with prior friends
+- [X] Fixed the state issue
+- [X] Make sure that your messages show up when I text
+- [X] Fix the problem of the client crashing when disconnecting and then reconnecting
 
 ## Schedule:
 - Team Formation (please find your team by April 30)
@@ -37,7 +49,7 @@ Turing and his friends built one of the first computers to crack the Enigma code
 But the question is: how? 
 
 ### Assignment
-The intuitive idea is, of course, to scramble your message, a process that we call encryption. You want your friend to read the clear message, so you will need decryption as well. This takes the form of an agreement between you and your friend before you send your scrambled message. 
+The intuitive idea is, of course, `to scramble your message`, a process that we call encryption. `You want your friend to read the clear message, so you will need decryption as well.` This takes the form of an agreement between you and your friend before you send your scrambled message. 
 
 ### Information
 On the Internet, everything said is in the open. So there is no hideaway in which you and your friend can meet. So how is it possible to establish such an agreement, and then communicate? 
@@ -68,7 +80,3 @@ The work will be evaluated on the following criteria:
 # Useful Link
 https://www.youtube.com/watch?v=hs7GLsHQCPQ
 
-# Improvements
-- [ ] Design the UI/UX
-- [ ] Stop the menu from sending in the chat
-- [ ] Correct the funcitonality that occurs when a duplicate username is given
