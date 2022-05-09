@@ -84,7 +84,8 @@ class Client:
                 self.state = S_LOGGEDIN
                 self.sm.set_state(S_LOGGEDIN)
                 self.sm.set_myname(self.name)
-                self.print_instructions()
+                # Don't print the instructions lol
+                # self.print_instructions()
                 return (True)
             elif response["status"] == 'duplicate':
                 self.system_msg += 'Duplicate username, try again'
@@ -165,7 +166,7 @@ class Client:
 
         self.chat_label = ttk.Label(
             self.signin,
-            text="Chat Window")
+            text=f"Chat Window | {self.name.title()}")
 
         self.chat_label.pack(
             fill='x',
@@ -173,13 +174,21 @@ class Client:
             # ipady=20,
             expand=True)
 
-        menu = "\n++++ Choose one of the following commands\n \
-                time: calendar time in the system\n \
-                who: to find out who else are there\n \
-                c _peer_: to connect to the _peer_ and chat\n \
-                ? _term_: to search your chat logs where _term_ appears\n \
-                p _#_: to get number <#> sonnet\n \
-                q: to leave the chat system\n\n"
+        # Exit Button
+        self.button = ttk.Button(
+            self.signin,
+            text="EXIT",
+            command=self.exit_chat)
+
+        self.button.pack(fill='x', expand=True, pady=10)
+
+        menu = "Choose one of the following commands\n \
+        time: calendar time in the system\n \
+        who: to find out who else are there\n \
+        c _peer_: to connect to the _peer_ and chat\n \
+        ? _term_: to search your chat logs where _term_ appears\n \
+        p _#_: to get number <#> sonnet\n \
+        q: to leave the chat system\n\n"
 
         self.chat_instructions = ttk.Label(
             self.signin,
@@ -242,6 +251,19 @@ class Client:
 
     def write_bind(self, event):
         self.write()
+
+    def exit_chat(self):
+        text = 'q'
+        self.console_input.append(text) # no need for lock, append is thread safe
+        # print("STATE",self.state)
+        # if self.sm.get_state() == S_CHATTING:
+            # self.message = f"[{self.name}]{self.msg.get()}\n"
+        # if self.state == S_LOGGEDIN
+        # else:
+            # self.message = f"{self.msg.get()}\n"
+        # self.text_area.insert('end', self.message)
+        # self.text_area.yview('end')
+        # self.user_box.delete(0, 'end')
 
     def write(self):
         text = self.user_box.get()

@@ -62,7 +62,7 @@ class ClientSM:
             if len(my_msg) > 0:
 
                 if my_msg == 'q':
-                    self.out_msg += 'See you next time!\n'
+                    # self.out_msg += 'See you next time!\n'
                     self.state = S_OFFLINE
 
                 # This is what happens when the user types in time
@@ -111,7 +111,9 @@ class ClientSM:
                         self.out_msg += 'Sonnet ' + poem_idx + ' not found\n\n'
 
                 else:
-                    self.out_msg += menu
+                    # I can take this away if I want
+                    # self.out_msg += menu
+                    pass
 
             if len(peer_msg) > 0:
                 try:
@@ -176,7 +178,8 @@ class ClientSM:
 
             # Display the menu again
             if self.state == S_LOGGEDIN:
-                self.out_msg += menu
+                pass
+                # self.out_msg += menu
 # ==============================================================================
 # invalid state
 # ==============================================================================
