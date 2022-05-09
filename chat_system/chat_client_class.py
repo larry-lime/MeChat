@@ -27,8 +27,9 @@ class Client:
 
     def init_chat(self):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM )
-        svr = SERVER if self.args.d == None else (self.args.d, CHAT_PORT)
-        self.socket.connect(svr)
+        # svr = SERVER if self.args.d == None else (self.args.d, CHAT_PORT)
+        # self.socket.connect(svr)
+        self.socket.connect(('0.tcp.jp.ngrok.io', 17992))
         self.sm = csm.ClientSM(self.socket)
         reading_thread = threading.Thread(target=self.read_input)
         reading_thread.daemon = True

@@ -26,7 +26,8 @@ class Server:
         # start server
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.bind(SERVER)
-        self.server.listen(5)
+        # self.server.listen(5)
+        self.server.listen()
         self.all_sockets.append(self.server)
         # initialize past chat indices
         self.indices = {}
@@ -44,6 +45,7 @@ class Server:
     def login(self, sock):
         # read the msg that should have login code plus username
         try:
+            # print('MY RECV',myrecv(sock))
             msg = json.loads(myrecv(sock))
             if len(msg) > 0:
 
