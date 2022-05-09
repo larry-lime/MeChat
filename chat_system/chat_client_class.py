@@ -39,13 +39,11 @@ class Client:
         # self.socket.connect(svr)
         self.socket.connect(('0.tcp.jp.ngrok.io', 12856))
         self.sm = csm.ClientSM(self.socket)
-        # reading_thread = threading.Thread(target=self.read_input)
         reading_thread = threading.Thread(target=self.gui_loop)
         reading_thread.daemon = True
         reading_thread.start()
 
     def shutdown_chat(self):
-        # print("SHUTDOWN")
         self.running = False
         return
 
@@ -217,7 +215,11 @@ class Client:
         self.user_box.focus()
 
         # Tkinter Button 
-        button_icon = tk.PhotoImage(file='..\\temp\\assets\\send_icon_smaller.png')
+        try: 
+            button_icon = tk.PhotoImage(file='..\\temp\\assets\\send_icon_smaller.png')
+        except:
+            button_icon = tk.PhotoImage(file='../temp/assets/send_icon_smaller.png')
+
         self.button = ttk.Button(
             self.signin,
             image=button_icon,
