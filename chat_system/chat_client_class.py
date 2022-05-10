@@ -89,6 +89,7 @@ class Client:
         self.root = tk.Tk()
         self.root.geometry("300x150")
         self.root.resizable(False, False)
+        # self.root.resizable(True, True)
         self.root.title("Chat Login")
 
         # Login String Variables
@@ -140,7 +141,8 @@ class Client:
         # Tkinter Window
         self.root = tk.Tk()
         self.root.geometry("600x800")
-        self.root.resizable(False, False)
+        # self.root.resizable(False, False)
+        self.root.resizable(True, True)
         self.root.title("Chat Windows")
 
         # Chat String Variables
