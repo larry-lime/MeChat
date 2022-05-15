@@ -10,6 +10,8 @@ import threading
 import tkinter as tk
 from tkinter import ttk
 import tkinter.scrolledtext as tks
+from tkinter.messagebox import showerror, showwarning, showinfo
+
 
 class Client:
     def __init__(self, args):
@@ -22,9 +24,9 @@ class Client:
         self.peer_msg = ''
         self.args = args
         # GUI Vars
-        self.username = ""
         self.running = False
         self.gui_done = False
+        self.login_ok = False
 
     def quit(self):
         self.socket.shutdown(socket.SHUT_RDWR)
@@ -68,104 +70,85 @@ class Client:
     def login(self):
         my_msg, peer_msg = self.get_msgs()
         if len(my_msg) > 0:
-            self.name = my_msg
-            msg = json.dumps({"action":"login", "name":self.name})
+            # print(my_msg)
+            login_info = my_msg.split('\n')
+            self.name = login_info[0]
+            self.pswrd = login_info[1]
+            # print('PASSWORD',self.pswrd)
+            msg = json.dumps({"action":"login", "name":self.name, "password":self.pswrd})
             self.send(msg)
             response = json.loads(self.recv())
+            # This checks whether the user is authenticated
             if response["status"] == 'ok':
                 self.state = S_LOGGEDIN
                 self.sm.set_state(S_LOGGEDIN)
                 self.sm.set_myname(self.name)
-                # self.print_instructions()
+                self.login_ok = True
                 return (True)
             elif response["status"] == 'duplicate':
-                self.system_msg += 'Duplicate username, try again'
+                self.login_ok = False
+                # self.system_msg += 'Duplicate username, try again'
                 return False
         else:               # fix: dup is only one of the reasons
            return(False)
 
     def gui_login(self):
         # Tkinter Window
-        self.root = tk.Tk()
-        self.root.geometry("300x150")
-        self.root.resizable(False, False)
-        # self.root.resizable(True, True)
-        self.root.title("Chat Login")
+        self.login_root = tk.Tk()
+        self.login_root.geometry("300x150")
+        self.login_root.resizable(False, False)
+        self.login_root.title("User Login")
 
         # Login String Variables
-        self.username = tk.StringVar()
+        username = tk.StringVar()
+        password = tk.StringVar()
 
         # Sign in frame
-        self.signin = ttk.Frame(self.root)
-        self.signin.pack(
-            padx=15,
-            pady=10,
-            fill='x',
-            expand=True
-        )
+        self.signin = ttk.Frame(self.login_root)
+        self.signin.pack( padx=15, pady=10, fill='x', expand=True)
 
         # Username 
-        self.user_label = ttk.Label(
-            self.signin,
-            text="Username:")
-        self.user_label.pack(
-            fill='x',
-            expand=True)
-
-        self.user_box = ttk.Entry(
-            self.signin,
-            textvariable=self.username)
-        self.user_box.pack(
-            fill='x',
-            expand=True)
-
-        self.user_box.bind('<Return>', self.login_bind)
-
+        self.user_label = ttk.Label( self.signin, text="Username:")
+        self.user_label.pack( fill='x', expand=True)
+        self.user_box = ttk.Entry(self.signin, textvariable=username)
+        self.user_box.pack( fill='x', expand=True)
         self.user_box.focus()
+        self.user_box.bind('<Return>', self.user_bind)
+
+        # Password
+        self.password = ttk.Label( self.signin, text="Password:")
+        self.password.pack( fill='x', expand=True)
+        self.password_box = ttk.Entry( self.signin, textvariable=password, show='*')
+        self.password_box.pack( fill='x', expand=True)
+        self.password_box.bind('<Return>', self.login_bind)
 
         # Login Button
-        self.button = ttk.Button(
-            self.signin,
-            # text="Login",
-            text="SEND",
-            command=self.login_action
-        )
-
+        self.button = ttk.Button( self.signin, text="Login", command=self.login_action)
         self.button.pack(fill='x', expand=True, pady=10)
 
-        self.root.mainloop()
-        # print('LOGIN DONE')
+        # Execute mainloop
+        self.login_root.mainloop()
 
     def gui_chat(self):
 
         # Tkinter Window
-        self.root = tk.Tk()
-        self.root.geometry("600x800")
-        # self.root.resizable(False, False)
-        self.root.resizable(True, True)
-        self.root.title("Chat Windows")
+        self.chat_root = tk.Tk()
+        self.chat_root.geometry("600x800")
+        self.chat_root.resizable(True, True)
+        self.chat_root.title("Chat Windows")
 
         # Chat String Variables
         self.msg = tk.StringVar()
 
         # Sign in frame
-        self.signin = ttk.Frame(self.root)
-        self.signin.pack(
-            padx=15,
-            pady=10,
-            fill='x',
-            expand=True
-        )
+        self.signin = ttk.Frame(self.chat_root)
+        self.signin.pack(padx=15, pady=10, fill='x', expand=True)
 
         self.chat_label = ttk.Label(
             self.signin,
             text=f"Chat Window | {self.name.title()}")
 
-        self.chat_label.pack(
-            fill='x',
-            # ipadx=20,
-            # ipady=20,
-            expand=True)
+        self.chat_label.pack( fill='x', expand=True)
 
         # Exit Button
         self.button = ttk.Button(
@@ -202,7 +185,7 @@ class Client:
             pady=5
         )
         # I don't think I actually need to disable this
-        # self.text_area.config(state='disabled')
+        self.text_area.config(state='disabled')
 
         # Message Box
         self.user_box = ttk.Entry(
@@ -232,38 +215,56 @@ class Client:
         self.button.pack(fill='x', expand=True, pady=10)
 
         self.running = True
-        self.root.mainloop()
+        self.chat_root.mainloop()
 
     def gui_loop(self):
-        self.gui_login()
+        while self.login_ok == False:
+            self.gui_login()
+            # self.gui_login_error()
         self.gui_chat()
+
+    def gui_login_error(self):
+        title = 'Login Error'
+        message = 'Duplicate username, try again'
+        showerror(title, message)
+
+    def user_bind(self, event):
+        self.user_action()
+        self.password_box.focus()
+
+    def user_action(self):
+        self.username = self.user_box.get()
 
     def login_bind(self, event):
         self.login_action()
 
     def login_action(self):
-        text = self.user_box.get()
-        self.console_input.append(text) # no need for lock, append is thread safe
-        self.root.destroy()
+        self.password = self.password_box.get()
+        self.console_input.append(self.username + '\n' + self.password) # no need for lock, append is thread safe
+        self.login_root.destroy()
 
     def write_bind(self, event):
         self.write()
 
     def exit_chat(self):
-        text = 'q'
-        self.console_input.append(text) # no need for lock, append is thread safe
+        if self.sm.get_state() == S_CHATTING:
+            text = 'bye'
+            self.console_input.append(text) # no need for lock, append is thread safe
+        elif self.sm.get_state() == S_LOGGEDIN:
+            text = 'q'
+            self.console_input.append(text) # no need for lock, append is thread safe
 
     def write(self):
         text = self.user_box.get()
         self.console_input.append(text) # no need for lock, append is thread safe
-        # print("STATE",self.state)
         if self.sm.get_state() == S_CHATTING:
             self.message = f"[{self.name}]{self.msg.get()}\n"
-        # if self.state == S_LOGGEDIN
         else:
             self.message = f"{self.msg.get()}\n"
+        self.text_area.config(state='normal')
         self.text_area.insert('end', self.message)
         self.text_area.yview('end')
+        self.text_area.config(state='disabled')
         self.user_box.delete(0, 'end')
 
     def output(self):
@@ -271,10 +272,11 @@ class Client:
             # I think that this is where I should implement the GUI
             print(self.system_msg)
             # ---GUI STUFF---
-            # if self.state == S_LOGGEDIN:
             if self.running:
+                self.text_area.config(state='normal')
                 self.text_area.insert('end', self.system_msg + '\n')
                 self.text_area.yview('end')
+                self.text_area.config(state='disabled')
             # ---GUI STUFF---
             self.system_msg = ''
 
@@ -296,6 +298,8 @@ class Client:
         self.output()
         while self.login() != True:
             self.output()
+        # if not self.login_ok:
+            # self.gui_login_error()
         self.system_msg += 'Welcome, ' + self.get_name() + '!'
         self.output()
         while self.sm.get_state() != S_OFFLINE:

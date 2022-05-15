@@ -3,26 +3,33 @@
 [Google Doc Link](https://docs.google.com/document/d/1SU8x_TNHdjzocSAzvC8QoXhl9OhHDEsWQrIHwncAQSI/edit?usp=sharing) 
 
 ## GUI Elements To-Do
-- [ ] Upgrade the Design the UI/UX
-    - [ ] Add the user's name at the top of the window
+- [o] Upgrade the Design the UI/UX
+    - [ ] Finish login features
+    - [ ] Create a user dashboard
     - [ ] Add buttons to replace typed in user functions
+    - [X] Make it so that the chat box is deactivated unless there is being a message displayed
+    - [X] Make sure that while chatting, when the user types exit in the chat room, they leave immediately
+    - [X] Add the user's name at the top of the window
 - [ ] Add login features
+    - [ ] Add a password login box
     - [ ] Password protected message history
     - [ ] Index system that stores messages with prior friends
 - [ ] Disable the chat box when it is not in use
+## Ngrok Elements To-Do
 - [ ] Issue:
     - [ ] Fix the creation of the .idx documents. That's causing errors when connecting. I should make them locally
     - [ ] There is an issue with repeat names I'm not so sure of the root of. It's very confusing
     - [ ] I will have to look at how idx files are created. All data should be saved locally
     - [ ] There is an issue with repeating names in the chat system
         - I'm trying to delete the .idx files but I'm not sure if that's the issue. This is very strange
+## Completed Tasks
 - [X] Make it so that people who connect to my website are able to chat with me
     - [X] Go onto another git branch for this
     - [X] This will require socket programming skills
 - [X] Fixed the state issue
 - [X] Make sure that your messages show up when I text
 - [X] Fix the problem of the client crashing when disconnecting and then reconnecting
-- [ ] Add the basic GUI interface
+- [X] Add the basic GUI interface
 
 ## Schedule:
 - Team Formation (please find your team by April 30)
@@ -75,11 +82,12 @@ The field of computer security (and a related field, data privacy) is a vast and
 
 The work will be evaluated on the following criteria:
 -	Compulsory topic: 50% 
-    -	Baseline (40%): the GUI can take and display messages for users
-    -	Innovative features (10%): the GUI contains one (or more) ingenious functions, e.g., login password, emoji, etc.
+    -	[ ] Baseline (40%): the GUI can take and display messages for users 
+    -	[ ] Innovative features (10%): the GUI contains one (or more) ingenious functions, e.g., login password, emoji, etc.
+        - [ ] Add user authentication
 -	Selective topic: 20%
     -	Completeness (10%): the code works properly, and the goals of the topic are achieved.
-    -	Integrated into the GUI (10%): the functions work with the GUI
+    -	[ ] Integrated into the GUI (10%): the functions work with the GUI
 -	Video Presentation: 30%
     -	Introduction(6%): Tell the audience what your project is; what is your motivation?
     -	Demo of the app(6%): A demo of your work, showing what your app looks like and how it works
@@ -89,4 +97,3 @@ The work will be evaluated on the following criteria:
 
 # Useful Link
 https://www.youtube.com/watch?v=hs7GLsHQCPQ
-

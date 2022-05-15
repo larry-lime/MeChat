@@ -49,6 +49,7 @@ class Server:
 
                 if msg["action"] == "login":
                     name = msg["name"]
+                    password = msg["password"]
                     if self.group.is_member(name) != True:
                         # move socket from new clients list to logged clients
                         self.new_clients.remove(sock)
@@ -61,6 +62,7 @@ class Server:
                                 self.indices[name] = pkl.load(open(name + ".idx", "rb"))
                             except IOError:  # chat index does not exist, then create one
                                 self.indices[name] = indexer.Index(name)
+                                # self.indices[name] = indexer.Index(name, password)
                         print(name + " logged in")
                         self.group.join(name)
                         mysend(sock, json.dumps({"action": "login", "status": "ok"}))
