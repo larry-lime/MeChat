@@ -3,15 +3,22 @@
 [Google Doc Link](https://docs.google.com/document/d/1SU8x_TNHdjzocSAzvC8QoXhl9OhHDEsWQrIHwncAQSI/edit?usp=sharing) 
 
 ## GUI Elements To-Do
-- [ ] Make it so that people who connect to my website are able to chat with me
-    - [ ] Go onto another git branch for this
-    - [ ] This will require socket programming skills
 - [ ] Upgrade the Design the UI/UX
     - [ ] Add the user's name at the top of the window
     - [ ] Add buttons to replace typed in user functions
 - [ ] Add login features
     - [ ] Password protected message history
     - [ ] Index system that stores messages with prior friends
+- [ ] Disable the chat box when it is not in use
+- [ ] Issue:
+    - [ ] Fix the creation of the .idx documents. That's causing errors when connecting. I should make them locally
+    - [ ] There is an issue with repeat names I'm not so sure of the root of. It's very confusing
+    - [ ] I will have to look at how idx files are created. All data should be saved locally
+    - [ ] There is an issue with repeating names in the chat system
+        - I'm trying to delete the .idx files but I'm not sure if that's the issue. This is very strange
+- [X] Make it so that people who connect to my website are able to chat with me
+    - [X] Go onto another git branch for this
+    - [X] This will require socket programming skills
 - [X] Fixed the state issue
 - [X] Make sure that your messages show up when I text
 - [X] Fix the problem of the client crashing when disconnecting and then reconnecting

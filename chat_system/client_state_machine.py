@@ -140,7 +140,9 @@ class ClientSM:
         elif self.state == S_CHATTING:
             if len(my_msg) > 0:     # my stuff going out
                 mysend(self.s, json.dumps(
+                    ###--ADD SECURE MESSAGING CODE HERE--###
                     {"action": "exchange", "from": "[" + self.me + "]", "message": my_msg}))
+                    ###--ADD SECURE MESSAGING CODE HERE--###
                 if my_msg == 'bye':
                     self.disconnect()
                     self.state = S_LOGGEDIN
@@ -148,7 +150,6 @@ class ClientSM:
 
             if len(peer_msg) > 0:    # peer's stuff, coming in
                 # ----------your code here------#
-                # peer_msg = json.loads(peer_msg)
                 try:
                     peer_msg = json.loads(peer_msg)
                 except Exception as err:
@@ -158,21 +159,18 @@ class ClientSM:
                 if peer_msg["action"] == "disconnect":
                     self.out_msg += peer_msg['msg'] + '\n'
                     self.state = S_LOGGEDIN
-                    # self.disconnect()
-                    # self.peer = ''
 
                 if peer_msg["action"] == "connect":
                     # ----------your code here------#
                     self.peer = peer_msg["from"]
                     self.out_msg += f'({self.peer} joined)'
-                    # self.state = S_CHATTING
 
                 if peer_msg["action"] == "exchange":
+                    ###--ADD SECURE MESSAGING CODE HERE--###
                     msg = peer_msg['message']
                     sender = peer_msg['from']
-                    # print(f"[{sender}]{msg}")
-                    # self.out_msg += f"[{sender}]{msg}"
                     self.out_msg += sender + msg
+                    ###--ADD SECURE MESSAGING CODE HERE--###
 
                 # ----------end of your code----#
 
