@@ -83,17 +83,18 @@ The field of computer security (and a related field, data privacy) is a vast and
 The work will be evaluated on the following criteria:
 -	Compulsory topic: 50% 
     -	[ ] Baseline (40%): the GUI can take and display messages for users 
-    -	[ ] Innovative features (10%): the GUI contains one (or more) ingenious functions, e.g., login password, emoji, etc.
-        - [ ] Add user authentication
+    -	[X] Innovative features (10%): the GUI contains one (or more) ingenious functions, e.g., login password, emoji, etc.
+        - [X] Add user authentication
 -	Selective topic: 20%
-    -	Completeness (10%): the code works properly, and the goals of the topic are achieved.
+    -	[ ] Completeness (10%): the code works properly, and the goals of the topic are achieved.
     -	[ ] Integrated into the GUI (10%): the functions work with the GUI
 -	Video Presentation: 30%
-    -	Introduction(6%): Tell the audience what your project is; what is your motivation?
-    -	Demo of the app(6%): A demo of your work, showing what your app looks like and how it works
-    -	Discussion (6%): Tell the audience what you did in the development, e.g., what packages you use, and/or, the significant modification in the original chat system
-    -	Analysis(6%): Your reflections on the development, e.g., is the organization of your code reasonable? What classes do you define? Or, the possible improvements
-    -	Impression(6%): This is about the impression of your presentation and your workload, being ranked with regard to others
+    - [ ] Powerpoint
+        -	[ ] Introduction(6%): Tell the audience what your project is; what is your motivation?
+        -	[ ] Discussion (6%): Tell the audience what you did in the development, e.g., what packages you use, and/or, the significant modification in the original chat system
+        -	[ ] Analysis(6%): Your reflections on the development, e.g., is the organization of your code reasonable? What classes do you define? Or, the possible improvements
+        -	[ ] Impression(6%): This is about the impression of your presentation and your workload, being ranked with regard to others
+    -	[ ] Demo of the app(6%): A demo of your work, showing what your app looks like and how it works
 
 # Useful Link
 https://www.youtube.com/watch?v=hs7GLsHQCPQ

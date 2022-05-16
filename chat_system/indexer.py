@@ -7,10 +7,9 @@ Created on Sat Jul  5 11:38:58 2014
 import pickle
 
 class Index:
+    # def __init__(self, name):
     def __init__(self, name):
-    # def __init__(self, name, password):
         self.name = name
-        # self.password = password
         self.msgs = [];
         self.index = {}
         self.total_msgs = 0

@@ -26,6 +26,7 @@ class Server:
         # start server
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.bind(SERVER)
+        # self.server.listen(100)
         self.server.listen(5)
         self.all_sockets.append(self.server)
         # initialize past chat indices
@@ -50,27 +51,71 @@ class Server:
                 if msg["action"] == "login":
                     name = msg["name"]
                     password = msg["password"]
-                    if self.group.is_member(name) != True:
-                        # move socket from new clients list to logged clients
-                        self.new_clients.remove(sock)
-                        # add into the name to sock mapping
-                        self.logged_name2sock[name] = sock
-                        self.logged_sock2name[sock] = name
-                        # load chat history of that user
-                        if name not in self.indices.keys():
-                            try:
-                                self.indices[name] = pkl.load(open(name + ".idx", "rb"))
-                            except IOError:  # chat index does not exist, then create one
-                                self.indices[name] = indexer.Index(name)
-                                # self.indices[name] = indexer.Index(name, password)
-                        print(name + " logged in")
-                        self.group.join(name)
-                        mysend(sock, json.dumps({"action": "login", "status": "ok"}))
-                    else:  # a client under this name has already logged in
-                        mysend(
-                            sock, json.dumps({"action": "login", "status": "duplicate"})
-                        )
-                        print(name + " duplicate login attempt")
+                    print('username:',name)
+                    print('password:',password)
+                    try:
+                        # Load the username and login file
+                        user_and_pass = pkl.load(open("username_and_passwords", "rb"))
+                        print(user_and_pass)
+                    except: 
+                        # Create one if one does not exist
+                        user_and_pass = {}
+
+                    # Add the username and password to user_and_pass
+                    if name not in user_and_pass.keys(): # If the username does not exist
+                        user_and_pass[name] = password
+                        pkl.dump(user_and_pass, open("username_and_passwords","wb"))
+                        user_and_pass = pkl.load(open("username_and_passwords", "rb"))
+
+                        if self.group.is_member(name) != True:
+                            # move socket from new clients list to logged clients
+                            self.new_clients.remove(sock)
+                            # add into the name to sock mapping
+                            self.logged_name2sock[name] = sock
+                            self.logged_sock2name[sock] = name
+                            # load chat history of that user
+                            if name not in self.indices.keys():
+                                try:
+                                    self.indices[name] = pkl.load(open(name + ".idx", "rb"))
+                                except IOError:  # chat index does not exist, then create one
+                                    self.indices[name] = indexer.Index(name)
+                            print(name + " logged in")
+                            self.group.join(name)
+                            mysend(sock, json.dumps({"action": "login", "status": "ok"}))
+                        else:  # a client under this name has already logged in
+                            mysend(
+                                sock, json.dumps({"action": "login", "status": "duplicate"})
+                            )
+                            print(name + " duplicate login attempt")
+
+                    else: #If the username exists
+                        if user_and_pass[name] == password:
+                            if self.group.is_member(name) != True:
+                                # move socket from new clients list to logged clients
+                                self.new_clients.remove(sock)
+                                # add into the name to sock mapping
+                                self.logged_name2sock[name] = sock
+                                self.logged_sock2name[sock] = name
+                                # load chat history of that user
+                                if name not in self.indices.keys():
+                                    try:
+                                        self.indices[name] = pkl.load(open(name + ".idx", "rb"))
+                                    except IOError:  # chat index does not exist, then create one
+                                        self.indices[name] = indexer.Index(name)
+                                print(name + " logged in")
+                                self.group.join(name)
+                                mysend(sock, json.dumps({"action": "login", "status": "ok"}))
+                            else:  # a client under this name has already logged in
+                                mysend(
+                                    sock, json.dumps({"action": "login", "status": "duplicate"})
+                                )
+                                print(name + " duplicate login attempt")
+                        else:
+                            mysend(
+                                sock, json.dumps({"action": "login", "status": "wrong"})
+                            )
+                            print(name + "bad login attempt")
+
                 else:
                     print("wrong code received")
             else:  # client died unexpectedly
@@ -102,6 +147,7 @@ class Server:
             msg = json.loads(msg)
             if msg["action"] == "connect":
                 to_name = msg["target"]
+                peer_key = msg['key']
                 from_name = self.logged_sock2name[from_sock]
                 if to_name == from_name:
                     msg = json.dumps({"action": "connect", "status": "self"})
@@ -120,6 +166,7 @@ class Server:
                                     "action": "connect",
                                     "status": "request",
                                     "from": from_name,
+                                    "key":peer_key
                                 }
                             ),
                         )
@@ -208,6 +255,11 @@ class Server:
             # ==============================================================================
             #                 time
             # ==============================================================================
+            elif msg["action"] == "send_key":
+                key = msg["key"]
+                print('TEST:',key)
+                mysend(from_sock, json.dumps({"action": "send_key", "key": key}))
+
             elif msg["action"] == "time":
                 # This is the actual time
                 ctime = time.strftime("%d.%m.%y,%H:%M", time.localtime())

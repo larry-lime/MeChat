@@ -6,12 +6,12 @@ import json
 from chat_utils import *
 import client_state_machine as csm
 import threading
+import time
 # GUI
 import tkinter as tk
 from tkinter import ttk
 import tkinter.scrolledtext as tks
 from tkinter.messagebox import showerror, showwarning, showinfo
-
 
 class Client:
     def __init__(self, args):
@@ -25,12 +25,20 @@ class Client:
         self.args = args
         # GUI Vars
         self.running = False
+        self.trigger = False
         self.gui_done = False
         self.login_ok = False
+        self.chat_start = True
 
     def quit(self):
         self.socket.shutdown(socket.SHUT_RDWR)
         self.socket.close()
+
+    def get_trigger(self):
+        return self.trigger
+
+    def set_trigger(self,arg):
+        self.trigger = arg
 
     def get_name(self):
         return self.name
@@ -39,7 +47,7 @@ class Client:
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM )
         svr = SERVER if self.args.d == None else (self.args.d, CHAT_PORT)
         self.socket.connect(svr)
-        # self.socket.connect(('0.tcp.jp.ngrok.io', 15664))
+        # self.socket.connect(('0.tcp.jp.ngrok.io', 15272))
         self.sm = csm.ClientSM(self.socket)
         reading_thread = threading.Thread(target=self.gui_loop)
         reading_thread.daemon = True
@@ -78,21 +86,39 @@ class Client:
             msg = json.dumps({"action":"login", "name":self.name, "password":self.pswrd})
             self.send(msg)
             response = json.loads(self.recv())
+            print('response:',response)
             # This checks whether the user is authenticated
             if response["status"] == 'ok':
+                self.trigger = True
+                self.login_ok = True
                 self.state = S_LOGGEDIN
                 self.sm.set_state(S_LOGGEDIN)
                 self.sm.set_myname(self.name)
-                self.login_ok = True
                 return (True)
+
             elif response["status"] == 'duplicate':
-                self.login_ok = False
-                # self.system_msg += 'Duplicate username, try again'
+                self.trigger = True
+                self.login_ok = 'DUPL'
+                return False
+
+            elif response["status"] == 'wrong':
+                self.trigger = True
+                self.login_ok = 'WRONG'
                 return False
         else:               # fix: dup is only one of the reasons
            return(False)
 
     def gui_login(self):
+        if self.login_ok == 'DUPL':
+            title = 'Login Error'
+            message = 'Duplicate username, try again'
+            showerror(title, message)
+
+        elif self.login_ok == 'WRONG':
+            title = 'Login Error'
+            message = 'Wrong username or password'
+            showerror(title, message)
+
         # Tkinter Window
         self.login_root = tk.Tk()
         self.login_root.geometry("300x150")
@@ -129,6 +155,18 @@ class Client:
         # Execute mainloop
         self.login_root.mainloop()
 
+    def profile_select(self):
+        import os 
+        import random
+        files = []
+        for file in os.listdir('../temp/assets/'):
+            if file.startswith('minion'):
+                files.append(file)
+        print(files)
+        random_file = random.choice(files)
+        # return path to file
+        return '../temp/assets/' + random_file
+
     def gui_chat(self):
 
         # Tkinter Window
@@ -144,19 +182,15 @@ class Client:
         self.signin = ttk.Frame(self.chat_root)
         self.signin.pack(padx=15, pady=10, fill='x', expand=True)
 
+        profile_pic=tk.PhotoImage(file=self.profile_select())
+
         self.chat_label = ttk.Label(
             self.signin,
+            image=profile_pic,
+            compound=tk.LEFT,
             text=f"Chat Window | {self.name.title()}")
 
         self.chat_label.pack( fill='x', expand=True)
-
-        # Exit Button
-        self.button = ttk.Button(
-            self.signin,
-            text="EXIT",
-            command=self.exit_chat)
-
-        self.button.pack(fill='x', expand=True, pady=10)
 
         menu = "Choose one of the following commands\n \
         time: calendar time in the system\n \
@@ -166,26 +200,27 @@ class Client:
         p _#_: to get number <#> sonnet\n \
         q: to leave the chat system\n\n"
 
-        self.chat_instructions = ttk.Label(
-            self.signin,
-            text=menu
-        )
-
-        self.chat_instructions.pack(
-            fill='x',
-            # ipadx=20,
-            # ipady=20,
-            expand=True)
+        self.chat_instructions = ttk.Label( self.signin, text=menu)
+        self.chat_instructions.pack( fill='x', expand=True)
 
         # Chat Window
+
         self.text_area = tks.ScrolledText(self.signin)
-        self.text_area.pack(
-            fill='x',
-            # padx=20,
-            pady=5
-        )
-        # I don't think I actually need to disable this
+        self.text_area.pack(fill='x', pady=5) # I don't think I actually need to disable this
         self.text_area.config(state='disabled')
+
+        # Command Window
+        # self.command_area = tks.ScrolledText(self.signin,width=20)
+        # self.command_area.pack(side='left', pady=5) # I don't think I actually need to disable this
+        # self.command_area.config(state='disabled')
+
+        # Exit Button
+        self.button = ttk.Button(
+            self.signin,
+            text="EXIT",
+            command=self.exit_chat)
+
+        self.button.pack(side='bottom',pady=0)
 
         # Message Box
         self.user_box = ttk.Entry(
@@ -196,7 +231,6 @@ class Client:
             expand=True)
 
         self.user_box.bind('<Return>', self.write_bind)
-
         self.user_box.focus()
 
         # Tkinter Button 
@@ -213,20 +247,22 @@ class Client:
             command=self.write)
 
         self.button.pack(fill='x', expand=True, pady=10)
-
         self.running = True
+
         self.chat_root.mainloop()
 
     def gui_loop(self):
-        while self.login_ok == False:
+        # while self.login_ok or self.login_ok == 'DUPL' or self.login == 'WRONG':
+        while self.sm.get_state() != S_LOGGEDIN:
+            # if self.sm.get_state() == S_CONNECTED:
+            # if self.login_ok != True:
+            print('gui loop')
             self.gui_login()
+            # else:
+                # break
             # self.gui_login_error()
         self.gui_chat()
 
-    def gui_login_error(self):
-        title = 'Login Error'
-        message = 'Duplicate username, try again'
-        showerror(title, message)
 
     def user_bind(self, event):
         self.user_action()
@@ -241,7 +277,13 @@ class Client:
     def login_action(self):
         self.password = self.password_box.get()
         self.console_input.append(self.username + '\n' + self.password) # no need for lock, append is thread safe
-        self.login_root.destroy()
+        while True:
+            if self.get_trigger() == True:
+                self.login_root.destroy()
+                self.set_trigger(False)
+                break
+            else:
+                time.sleep(1)
 
     def write_bind(self, event):
         self.write()
@@ -258,14 +300,20 @@ class Client:
         text = self.user_box.get()
         self.console_input.append(text) # no need for lock, append is thread safe
         if self.sm.get_state() == S_CHATTING:
+            if self.chat_start == True:
+                # showinfo('TEST','INFO')
+                pass
             self.message = f"[{self.name}]{self.msg.get()}\n"
+            self.chat_start = False
         else:
+            self.chat_start = True
             self.message = f"{self.msg.get()}\n"
         self.text_area.config(state='normal')
         self.text_area.insert('end', self.message)
         self.text_area.yview('end')
         self.text_area.config(state='disabled')
         self.user_box.delete(0, 'end')
+
 
     def output(self):
         if len(self.system_msg) > 0:

@@ -5,7 +5,7 @@ Created on Sun Apr  5 00:00:32 2015
 """
 from chat_utils import *
 import json
-
+from secure_messaging import Scmsg
 
 class ClientSM:
     def __init__(self, s):
@@ -28,7 +28,9 @@ class ClientSM:
         return self.me
 
     def connect_to(self, peer):
-        msg = json.dumps({"action": "connect", "target": peer})
+        key=Scmsg().generate_key()
+        # {"action":"send_key","target":self.peer, "key":key} ))
+        msg = json.dumps({"action": "connect", "target": peer,"key":key})
         mysend(self.s, msg)
         response = json.loads(myrecv(self.s))
         if response["status"] == "success":
@@ -131,6 +133,13 @@ class ClientSM:
                     self.out_msg += '. Chat away!\n\n'
                     self.out_msg += '------------------------------------\n'
                     self.state = S_CHATTING
+                    # Secure messaging
+                    print('peeer message', peer_msg)
+                    peer_key = peer_msg["key"]
+                    print('KEY',peer_key)
+                    # peer_msg = json.loads(peer_msg)
+                    Scmsg().generate_public_key(peer_key)
+                    # Secure messaging
                     # ----------end of your code----#
 
 # ==============================================================================
@@ -139,8 +148,12 @@ class ClientSM:
 # ==============================================================================
         elif self.state == S_CHATTING:
             if len(my_msg) > 0:     # my stuff going out
-                mysend(self.s, json.dumps(
+                # my_msg=Scmsg().encrypt_msg(my_msg)
+                # mysend(self.s, json.dumps(
                     ###--ADD SECURE MESSAGING CODE HERE--###
+                    # {"action": "exchange", "from": "[" + self.me + "]", "message": my_msg}))
+                my_msg=Scmsg().encrypt_msg(my_msg)
+                mysend(self.s, json.dumps( 
                     {"action": "exchange", "from": "[" + self.me + "]", "message": my_msg}))
                     ###--ADD SECURE MESSAGING CODE HERE--###
                 if my_msg == 'bye':
@@ -167,8 +180,11 @@ class ClientSM:
 
                 if peer_msg["action"] == "exchange":
                     ###--ADD SECURE MESSAGING CODE HERE--###
-                    msg = peer_msg['message']
+                    # msg = peer_msg['message']
+                    msg = Scmsg.decrypt_msg(peer_msg['message']) 
                     sender = peer_msg['from']
+                    # msg = Scmsg.decrypt_msg(peer_msg['message'])
+                    # sender = peer_msg['from']
                     self.out_msg += sender + msg
                     ###--ADD SECURE MESSAGING CODE HERE--###
 
