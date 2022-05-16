@@ -85,6 +85,9 @@ class Group:
                 del self.chat_grps[group_key]
         return
 
+    def list_ppl(self):
+        return self.members
+
     def list_all(self):
         # a simple minded implementation
         full_list = "Users: ------------" + "\n"

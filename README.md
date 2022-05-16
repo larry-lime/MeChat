@@ -1,26 +1,29 @@
 # Final Project
-### Final Project Guideline:  
+
+## Final Project Guideline:  
 [Google Doc Link](https://docs.google.com/document/d/1SU8x_TNHdjzocSAzvC8QoXhl9OhHDEsWQrIHwncAQSI/edit?usp=sharing) 
 
 ## GUI Elements To-Do
-- [o] Upgrade the Design the UI/UX
-    - [ ] Finish login features
-    - [ ] Create a user dashboard
-    - [ ] Add buttons to replace typed in user functions
+- [O] Upgrade the Design the UI/UX
+    - [ ] Add an exit button to the login that
+    - [X] Make the buttons nicer
+    - [X] Add a "Find friends button that connects you with a random friend"
+    - [X] Add a "Sonnet" button that displays a random sonnet
+    - [X] Finish login features
     - [X] Make it so that the chat box is deactivated unless there is being a message displayed
     - [X] Make sure that while chatting, when the user types exit in the chat room, they leave immediately
     - [X] Add the user's name at the top of the window
-- [ ] Add login features
-    - [ ] Add a password login box
-    - [ ] Password protected message history
-    - [ ] Index system that stores messages with prior friends
-- [ ] Disable the chat box when it is not in use
+- [X] Add login features
+    - [X] Add a password login box
+    - [X] Password protected message history
+- [X] Disable the chat box when it is not in use
+
 ## Ngrok Elements To-Do
-- [ ] Issue:
-    - [ ] Fix the creation of the .idx documents. That's causing errors when connecting. I should make them locally
-    - [ ] There is an issue with repeat names I'm not so sure of the root of. It's very confusing
-    - [ ] I will have to look at how idx files are created. All data should be saved locally
-    - [ ] There is an issue with repeating names in the chat system
+- [X] Issue:
+    - [X] Fix the creation of the .idx documents. That's causing errors when connecting. I should make them locally
+    - [X] There is an issue with repeat names I'm not so sure of the root of. It's very confusing
+    - [X] I will have to look at how idx files are created. All data should be saved locally
+    - [X] There is an issue with repeating names in the chat system
         - I'm trying to delete the .idx files but I'm not sure if that's the issue. This is very strange
 ## Completed Tasks
 - [X] Make it so that people who connect to my website are able to chat with me
@@ -34,7 +37,7 @@
 ## Schedule:
 - Team Formation (please find your team by April 30)
     - each team can have two or three members.
-    - But for teams of three, you need to complete the compulsory topic and two selective topics.) 
+    - But for teams of three, you need to complete the compulsory topic and two selective topics.)
     - Submitting your code and video record (by May 12)
     
 ## Notes:
@@ -66,7 +69,7 @@ Turing and his friends built one of the first computers to crack the Enigma code
 But the question is: how? 
 
 ### Assignment
-The intuitive idea is, of course, `to scramble your message`, a process that we call encryption. `You want your friend to read the clear message, so you will need decryption as well.` This takes the form of an agreement between you and your friend before you send your scrambled message. 
+The intuitive idea is, of course, to scramble your message, a process that we call encryption. You want your friend to read the clear message, so you will need decryption as well.` This takes the form of an agreement between you and your friend before you send your scrambled message. 
 
 ### Information
 On the Internet, everything said is in the open. So there is no hideaway in which you and your friend can meet. So how is it possible to establish such an agreement, and then communicate? 
@@ -95,6 +98,3 @@ The work will be evaluated on the following criteria:
         -	[ ] Analysis(6%): Your reflections on the development, e.g., is the organization of your code reasonable? What classes do you define? Or, the possible improvements
         -	[ ] Impression(6%): This is about the impression of your presentation and your workload, being ranked with regard to others
     -	[ ] Demo of the app(6%): A demo of your work, showing what your app looks like and how it works
-
-# Useful Link
-https://www.youtube.com/watch?v=hs7GLsHQCPQ

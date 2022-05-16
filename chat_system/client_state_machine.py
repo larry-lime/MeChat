@@ -5,7 +5,7 @@ Created on Sun Apr  5 00:00:32 2015
 """
 from chat_utils import *
 import json
-from secure_messaging import Scmsg
+from DES import des
 
 class ClientSM:
     def __init__(self, s):
@@ -28,9 +28,7 @@ class ClientSM:
         return self.me
 
     def connect_to(self, peer):
-        key=Scmsg().generate_key()
-        # {"action":"send_key","target":self.peer, "key":key} ))
-        msg = json.dumps({"action": "connect", "target": peer,"key":key})
+        msg = json.dumps({"action": "connect", "target": peer})
         mysend(self.s, msg)
         response = json.loads(myrecv(self.s))
         if response["status"] == "success":
@@ -47,7 +45,6 @@ class ClientSM:
 
     def disconnect(self):
         msg = json.dumps({"action": "disconnect"})
-        # print(type(self.s))
         mysend(self.s, msg)
         self.out_msg += 'You are disconnected from ' + self.peer + '\n'
         self.peer = ''
@@ -75,6 +72,30 @@ class ClientSM:
                     time_in = json.loads(myrecv(self.s))["results"]
                     # This assigns the message to the output message
                     self.out_msg += "Time is: " + time_in
+
+                ###---Test code---###
+                # elif my_msg == 'Find me a friend please ╰(*°▽°*)╯':
+                elif my_msg == 'find_friend':
+                    mysend(self.s, json.dumps({"action": "find_friends"}))
+                    people = json.loads(myrecv(self.s))["results"]
+                    print(people)
+                    print(type(people))
+                    print(self.get_myname())
+                    import random 
+                    if len(people) == 1:
+                        self.out_msg += 'No one is online, try again later\n'
+                    else:
+                        while True:
+                            person = random.choice(list(people))
+                            if person != self.get_myname():
+                                break
+                        if self.connect_to(person) == True:
+                            self.state = S_CHATTING
+                            self.out_msg += 'Connect to ' + person + '. Chat away!\n\n'
+                            self.out_msg += '-----------------------------------\n'
+                        else:
+                            self.out_msg += 'Connection unsuccessful\n'
+                ###---Test code---###
 
                 elif my_msg == 'who':
                     mysend(self.s, json.dumps({"action": "list"}))
@@ -134,11 +155,11 @@ class ClientSM:
                     self.out_msg += '------------------------------------\n'
                     self.state = S_CHATTING
                     # Secure messaging
-                    print('peeer message', peer_msg)
-                    peer_key = peer_msg["key"]
-                    print('KEY',peer_key)
+                    # print('peeer message', peer_msg)
+                    # peer_key = peer_msg["key"]
+                    # print('KEY',peer_key)
                     # peer_msg = json.loads(peer_msg)
-                    Scmsg().generate_public_key(peer_key)
+                    # Scmsg().generate_public_key(peer_key)
                     # Secure messaging
                     # ----------end of your code----#
 
@@ -148,13 +169,14 @@ class ClientSM:
 # ==============================================================================
         elif self.state == S_CHATTING:
             if len(my_msg) > 0:     # my stuff going out
-                # my_msg=Scmsg().encrypt_msg(my_msg)
-                # mysend(self.s, json.dumps(
+                # my_message=Scmsg().encrypt_msg(my_msg)
+                my_message = des().encryption(my_msg)
+                mysend(self.s, json.dumps(
                     ###--ADD SECURE MESSAGING CODE HERE--###
+                    {"action": "exchange", "from": "[" + self.me + "]", "message": my_message}))
+                # my_msg=Scmsg().encrypt_msg(my_msg)
+                # mysend(self.s, json.dumps( 
                     # {"action": "exchange", "from": "[" + self.me + "]", "message": my_msg}))
-                my_msg=Scmsg().encrypt_msg(my_msg)
-                mysend(self.s, json.dumps( 
-                    {"action": "exchange", "from": "[" + self.me + "]", "message": my_msg}))
                     ###--ADD SECURE MESSAGING CODE HERE--###
                 if my_msg == 'bye':
                     self.disconnect()
@@ -181,7 +203,8 @@ class ClientSM:
                 if peer_msg["action"] == "exchange":
                     ###--ADD SECURE MESSAGING CODE HERE--###
                     # msg = peer_msg['message']
-                    msg = Scmsg.decrypt_msg(peer_msg['message']) 
+                    # msg = Scmsg().decrypt_msg(peer_msg['message']) 
+                    msg = des().decryption(peer_msg['message'])
                     sender = peer_msg['from']
                     # msg = Scmsg.decrypt_msg(peer_msg['message'])
                     # sender = peer_msg['from']

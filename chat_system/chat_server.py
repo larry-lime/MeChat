@@ -14,8 +14,6 @@ import json
 import pickle as pkl
 from chat_utils import *
 import chat_group as grp
-# I CHANGED THIS COMMENT
-# THIOPAPINDASPOIDNADI
 
 class Server:
     def __init__(self):
@@ -27,8 +25,8 @@ class Server:
         # start server
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.bind(SERVER)
-        # self.server.listen(100)
-        self.server.listen(5)
+        self.server.listen(100)
+        # self.server.listen(5)
         self.all_sockets.append(self.server)
         # initialize past chat indices
         self.indices = {}
@@ -148,7 +146,7 @@ class Server:
             msg = json.loads(msg)
             if msg["action"] == "connect":
                 to_name = msg["target"]
-                peer_key = msg['key']
+                # peer_key = msg['key']
                 from_name = self.logged_sock2name[from_sock]
                 if to_name == from_name:
                     msg = json.dumps({"action": "connect", "status": "self"})
@@ -167,7 +165,7 @@ class Server:
                                     "action": "connect",
                                     "status": "request",
                                     "from": from_name,
-                                    "key":peer_key
+                                    # "key":peer_key
                                 }
                             ),
                         )
@@ -224,6 +222,15 @@ class Server:
                             }
                         ),
                     )
+            elif msg["action"] == "find_friends":
+
+                # IMPLEMENTATION
+                # ---- start your code ---- #
+                # print('msg:',msg)
+                g = self.group
+                people = g.list_ppl()
+                # ---- end of your code --- #
+                mysend(from_sock, json.dumps({"action": "list", "results": people}))
             # ==============================================================================
             #                 listing available peers: IMPLEMENT THIS
             # ==============================================================================
