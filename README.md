@@ -4,8 +4,8 @@
 [Google Doc Link](https://docs.google.com/document/d/1SU8x_TNHdjzocSAzvC8QoXhl9OhHDEsWQrIHwncAQSI/edit?usp=sharing) 
 
 ## GUI Elements To-Do
-- [O] Upgrade the Design the UI/UX
-    - [ ] Add an exit button to the login that
+- [X] Upgrade the Design the UI/UX
+    - [X] Add an exit button to the login that
     - [X] Make the buttons nicer
     - [X] Add a "Find friends button that connects you with a random friend"
     - [X] Add a "Sonnet" button that displays a random sonnet
@@ -85,16 +85,26 @@ The field of computer security (and a related field, data privacy) is a vast and
 
 The work will be evaluated on the following criteria:
 -	Compulsory topic: 50% 
-    -	[ ] Baseline (40%): the GUI can take and display messages for users 
+    -	[X] Baseline (40%): the GUI can take and display messages for users 
     -	[X] Innovative features (10%): the GUI contains one (or more) ingenious functions, e.g., login password, emoji, etc.
-        - [X] Add user authentication
+        - [X] Add user authentication (username and password login)
+        - [X] Ngrok network chatting
+        - [X] Small features
+            - [X] "Emoji" button
+            - [X] Random sonnet
+            - [X] Random minion profile picture
 -	Selective topic: 20%
-    -	[ ] Completeness (10%): the code works properly, and the goals of the topic are achieved.
-    -	[ ] Integrated into the GUI (10%): the functions work with the GUI
+    -	[X] Completeness (10%): the code works properly, and the goals of the topic are achieved.
+        - [X] The messages are truly encrypted and decrypted
+    -	[X] Integrated into the GUI (10%): the functions work with the GUI
+        - [X] Integrated encryption/decryption with the GUI
 -	Video Presentation: 30%
-    - [ ] Powerpoint
-        -	[ ] Introduction(6%): Tell the audience what your project is; what is your motivation?
-        -	[ ] Discussion (6%): Tell the audience what you did in the development, e.g., what packages you use, and/or, the significant modification in the original chat system
+    - [O] Powerpoint
+        -	[X] Introduction(6%): Tell the audience what your project is; what is your motivation?
+            - [X] Talked about our motivation and what each part of our project is bout
+        -	[X] Discussion (6%): Tell the audience what you did in the development, e.g., what packages you use, and/or, the significant modification in the original chat system
+            - [X] Discussed the significant modifications that we did to the chat system. Only briefly went over the GUI
         -	[ ] Analysis(6%): Your reflections on the development, e.g., is the organization of your code reasonable? What classes do you define? Or, the possible improvements
-        -	[ ] Impression(6%): This is about the impression of your presentation and your workload, being ranked with regard to others
+        -	[X] Impression(6%): This is about the impression of your presentation and your workload, being ranked with regard to others
+        - [X] Irrelavent to us
     -	[ ] Demo of the app(6%): A demo of your work, showing what your app looks like and how it works

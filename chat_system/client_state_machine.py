@@ -169,15 +169,9 @@ class ClientSM:
 # ==============================================================================
         elif self.state == S_CHATTING:
             if len(my_msg) > 0:     # my stuff going out
-                # my_message=Scmsg().encrypt_msg(my_msg)
                 my_message = des().encryption(my_msg)
                 mysend(self.s, json.dumps(
-                    ###--ADD SECURE MESSAGING CODE HERE--###
                     {"action": "exchange", "from": "[" + self.me + "]", "message": my_message}))
-                # my_msg=Scmsg().encrypt_msg(my_msg)
-                # mysend(self.s, json.dumps( 
-                    # {"action": "exchange", "from": "[" + self.me + "]", "message": my_msg}))
-                    ###--ADD SECURE MESSAGING CODE HERE--###
                 if my_msg == 'bye':
                     self.disconnect()
                     self.state = S_LOGGEDIN
@@ -201,15 +195,9 @@ class ClientSM:
                     self.out_msg += f'({self.peer} joined)'
 
                 if peer_msg["action"] == "exchange":
-                    ###--ADD SECURE MESSAGING CODE HERE--###
-                    # msg = peer_msg['message']
-                    # msg = Scmsg().decrypt_msg(peer_msg['message']) 
                     msg = des().decryption(peer_msg['message'])
                     sender = peer_msg['from']
-                    # msg = Scmsg.decrypt_msg(peer_msg['message'])
-                    # sender = peer_msg['from']
                     self.out_msg += sender + msg
-                    ###--ADD SECURE MESSAGING CODE HERE--###
 
                 # ----------end of your code----#
 

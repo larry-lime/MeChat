@@ -50,12 +50,9 @@ class Server:
                 if msg["action"] == "login":
                     name = msg["name"]
                     password = msg["password"]
-                    print('username:',name)
-                    print('password:',password)
                     try:
                         # Load the username and login file
                         user_and_pass = pkl.load(open("username_and_passwords", "rb"))
-                        print(user_and_pass)
                     except: 
                         # Create one if one does not exist
                         user_and_pass = {}
@@ -67,12 +64,9 @@ class Server:
                         user_and_pass = pkl.load(open("username_and_passwords", "rb"))
 
                         if self.group.is_member(name) != True:
-                            # move socket from new clients list to logged clients
                             self.new_clients.remove(sock)
-                            # add into the name to sock mapping
                             self.logged_name2sock[name] = sock
                             self.logged_sock2name[sock] = name
-                            # load chat history of that user
                             if name not in self.indices.keys():
                                 try:
                                     self.indices[name] = pkl.load(open(name + ".idx", "rb"))

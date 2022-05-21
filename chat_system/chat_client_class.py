@@ -47,7 +47,7 @@ class Client:
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM )
         # svr = SERVER if self.args.d == None else (self.args.d, CHAT_PORT)
         # self.socket.connect(svr)
-        self.socket.connect(('0.tcp.jp.ngrok.io', 17368))
+        self.socket.connect(('0.tcp.jp.ngrok.io', 10984))
         self.sm = csm.ClientSM(self.socket)
         reading_thread = threading.Thread(target=self.gui_loop)
         reading_thread.daemon = True
@@ -82,12 +82,9 @@ class Client:
             login_info = my_msg.split('\n')
             self.name = login_info[0]
             self.pswrd = login_info[1]
-            # print('PASSWORD',self.pswrd)
             msg = json.dumps({"action":"login", "name":self.name, "password":self.pswrd})
             self.send(msg)
             response = json.loads(self.recv())
-            # print('response:',response)
-            # This checks whether the user is authenticated
             if response["status"] == 'ok':
                 self.trigger = True
                 self.login_ok = True
@@ -109,6 +106,7 @@ class Client:
            return(False)
 
     def gui_login(self):
+
         if self.login_ok == 'DUPL':
             title = 'Login Error'
             message = 'Duplicate username, try again'
@@ -128,7 +126,6 @@ class Client:
         # Login String Variables
         username = tk.StringVar()
         password = tk.StringVar()
-
 
         # Sign in frame
         self.signin = ttk.Frame(self.login_root)
@@ -152,10 +149,6 @@ class Client:
         # Login Button
         self.button = ttk.Button( self.signin, text="Login", command=self.login_action)
         self.button.pack(fill='x', expand=True, pady=10)
-
-        # Exit Button
-        # self.button = ttk.Button( self.signin, text="Exit", command=self.quit)
-        # self.button.pack(fill='x', expand=True, pady=0)
 
         # Execute mainloop
         self.login_root.mainloop()
@@ -252,8 +245,6 @@ q: to leave the chat system\n"
         # self.button.pack(fill='x', expand=True, pady=5)
         self.button.pack(fill='x', expand=True, pady=5)
         self.running = True
-
-
 
         # Start the mainloop
         self.chat_root.mainloop()
