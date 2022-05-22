@@ -33,7 +33,7 @@ class ClientSM:
         response = json.loads(myrecv(self.s))
         if response["status"] == "success":
             self.peer = peer
-            self.out_msg += 'You are connected with ' + self.peer + '\n'
+            self.out_msg += f"You are connected with {self.peer}" + '\n'
             return (True)
         elif response["status"] == "busy":
             self.out_msg += 'User is busy. Please try again later\n'
@@ -46,7 +46,7 @@ class ClientSM:
     def disconnect(self):
         msg = json.dumps({"action": "disconnect"})
         mysend(self.s, msg)
-        self.out_msg += 'You are disconnected from ' + self.peer + '\n'
+        self.out_msg += f"You are disconnecte from {self.peer}" + "\n"
         self.peer = ''
 
     def proc(self, my_msg, peer_msg):
@@ -61,20 +61,13 @@ class ClientSM:
             if len(my_msg) > 0:
 
                 if my_msg == 'q':
-                    # self.out_msg += 'See you next time!\n'
                     self.state = S_OFFLINE
 
-                # This is what happens when the user types in time
                 elif my_msg == 'time':
-                    # This sends the message to the server
                     mysend(self.s, json.dumps({"action": "time"}))
-                    # This receives the message from the server
                     time_in = json.loads(myrecv(self.s))["results"]
-                    # This assigns the message to the output message
                     self.out_msg += "Time is: " + time_in
 
-                ###---Test code---###
-                # elif my_msg == 'Find me a friend please ╰(*°▽°*)╯':
                 elif my_msg == 'find_friend':
                     mysend(self.s, json.dumps({"action": "find_friends"}))
                     people = json.loads(myrecv(self.s))["results"]
@@ -95,7 +88,6 @@ class ClientSM:
                             self.out_msg += '-----------------------------------\n'
                         else:
                             self.out_msg += 'Connection unsuccessful\n'
-                ###---Test code---###
 
                 elif my_msg == 'who':
                     mysend(self.s, json.dumps({"action": "list"}))
@@ -134,8 +126,6 @@ class ClientSM:
                         self.out_msg += 'Sonnet ' + poem_idx + ' not found\n\n'
 
                 else:
-                    # I can take this away if I want
-                    # self.out_msg += menu
                     pass
 
             if len(peer_msg) > 0:
@@ -154,13 +144,6 @@ class ClientSM:
                     self.out_msg += '. Chat away!\n\n'
                     self.out_msg += '------------------------------------\n'
                     self.state = S_CHATTING
-                    # Secure messaging
-                    # print('peeer message', peer_msg)
-                    # peer_key = peer_msg["key"]
-                    # print('KEY',peer_key)
-                    # peer_msg = json.loads(peer_msg)
-                    # Scmsg().generate_public_key(peer_key)
-                    # Secure messaging
                     # ----------end of your code----#
 
 # ==============================================================================

@@ -322,7 +322,6 @@ class Server:
                 sock, address = self.server.accept()
                 self.new_client(sock)
 
-
 def main():
     server = Server()
     server.run()

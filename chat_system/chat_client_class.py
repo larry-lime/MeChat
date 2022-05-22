@@ -13,6 +13,7 @@ from tkinter import ttk
 import tkinter.scrolledtext as tks
 from tkinter.messagebox import showerror, showwarning, showinfo
 
+
 class Client:
     def __init__(self, args):
         # This is the user of the system
@@ -37,17 +38,17 @@ class Client:
     def get_trigger(self):
         return self.trigger
 
-    def set_trigger(self,arg):
+    def set_trigger(self, arg):
         self.trigger = arg
 
     def get_name(self):
         return self.name
 
     def init_chat(self):
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM )
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         # svr = SERVER if self.args.d == None else (self.args.d, CHAT_PORT)
         # self.socket.connect(svr)
-        self.socket.connect(('0.tcp.jp.ngrok.io', 10984))
+        self.socket.connect(('0.tcp.jp.ngrok.io', 18160))
         self.sm = csm.ClientSM(self.socket)
         reading_thread = threading.Thread(target=self.gui_loop)
         reading_thread.daemon = True
@@ -67,7 +68,7 @@ class Client:
         read, write, error = select.select([self.socket], [], [], 0)
         my_msg = ''
         peer_msg = []
-        #peer_code = M_UNDEF    for json data, peer_code is redundant
+        # peer_code = M_UNDEF    for json data, peer_code is redundant
         if len(self.console_input) > 0:
             my_msg = self.console_input.pop(0)
         if self.socket in read:
@@ -82,7 +83,8 @@ class Client:
             login_info = my_msg.split('\n')
             self.name = login_info[0]
             self.pswrd = login_info[1]
-            msg = json.dumps({"action":"login", "name":self.name, "password":self.pswrd})
+            msg = json.dumps(
+                {"action": "login", "name": self.name, "password": self.pswrd})
             self.send(msg)
             response = json.loads(self.recv())
             if response["status"] == 'ok':
@@ -103,7 +105,7 @@ class Client:
                 self.login_ok = 'WRONG'
                 return False
         else:               # fix: dup is only one of the reasons
-           return(False)
+            return(False)
 
     def gui_login(self):
 
@@ -129,32 +131,34 @@ class Client:
 
         # Sign in frame
         self.signin = ttk.Frame(self.login_root)
-        self.signin.pack( padx=15, pady=10, fill='x', expand=True)
+        self.signin.pack(padx=15, pady=10, fill='x', expand=True)
 
-        # Username 
-        self.user_label = ttk.Label( self.signin, text="Username:")
-        self.user_label.pack( fill='x', expand=True)
+        # Username
+        self.user_label = ttk.Label(self.signin, text="Username:")
+        self.user_label.pack(fill='x', expand=True)
         self.user_box = ttk.Entry(self.signin, textvariable=username)
-        self.user_box.pack( fill='x', expand=True)
+        self.user_box.pack(fill='x', expand=True)
         self.user_box.focus()
         self.user_box.bind('<Return>', self.user_bind)
 
         # Password
-        self.password = ttk.Label( self.signin, text="Password:")
-        self.password.pack( fill='x', expand=True)
-        self.password_box = ttk.Entry( self.signin, textvariable=password, show='*')
-        self.password_box.pack( fill='x', expand=True)
+        self.password = ttk.Label(self.signin, text="Password:")
+        self.password.pack(fill='x', expand=True)
+        self.password_box = ttk.Entry(
+            self.signin, textvariable=password, show='*')
+        self.password_box.pack(fill='x', expand=True)
         self.password_box.bind('<Return>', self.login_bind)
 
         # Login Button
-        self.button = ttk.Button( self.signin, text="Login", command=self.login_action)
+        self.button = ttk.Button(
+            self.signin, text="Login", command=self.login_action)
         self.button.pack(fill='x', expand=True, pady=10)
 
         # Execute mainloop
         self.login_root.mainloop()
 
     def profile_select(self):
-        import os 
+        import os
         import random
         files = []
         for file in os.listdir('./assets/'):
@@ -180,7 +184,7 @@ class Client:
         self.signin = ttk.Frame(self.chat_root)
         self.signin.pack(padx=15, pady=10, fill='x', expand=True)
 
-        profile_pic=tk.PhotoImage(file=self.profile_select())
+        profile_pic = tk.PhotoImage(file=self.profile_select())
 
         self.chat_label = ttk.Label(
             self.signin,
@@ -188,7 +192,7 @@ class Client:
             compound=tk.LEFT,
             text=f"Chat Window | {self.name.title()}")
 
-        self.chat_label.pack( fill='x', expand=True)
+        self.chat_label.pack(fill='x', expand=True)
 
         menu = "\
 Chat commands:\n \
@@ -199,14 +203,14 @@ c _peer_: to connect to the _peer_ and chat\n \
 p _#_: to get number <#> sonnet\n \
 q: to leave the chat system\n"
 
-        self.chat_instructions = ttk.Label( self.signin, text=menu)
-        self.chat_instructions.pack( fill='x', expand=True)
+        self.chat_instructions = ttk.Label(self.signin, text=menu)
+        self.chat_instructions.pack(fill='x', expand=True)
 
         # Chat Window
         self.text_area = tks.ScrolledText(self.signin)
-        self.text_area.pack(fill='x', pady=5) # I don't think I actually need to disable this
+        # I don't think I actually need to disable this
+        self.text_area.pack(fill='x', pady=5)
         self.text_area.config(state='disabled')
-
 
         # Message Box
         self.user_box = ttk.Entry(
@@ -220,28 +224,33 @@ q: to leave the chat system\n"
         self.user_box.focus()
 
         # Exit Button
-        self.button = ttk.Button( self.signin, text="Exit", command=self.exit_chat)
-        self.button.pack(side='left',pady=5)
+        self.button = ttk.Button(
+            self.signin, text="Exit", command=self.exit_chat)
+        self.button.pack(side='left', pady=5)
 
         # Sonnet Button
-        self.button = ttk.Button( self.signin, text="Get Sonnet", command=self.sonnet_action)
-        self.button.pack(side='left',pady=5)
+        self.button = ttk.Button(
+            self.signin, text="Get Sonnet", command=self.sonnet_action)
+        self.button.pack(side='left', pady=5)
 
         # Find friends button
-        self.button = ttk.Button( self.signin, text="Find Friends", command=self.find_friends)
-        self.button.pack(side='left',pady=5)
+        self.button = ttk.Button(
+            self.signin, text="Find Friends", command=self.find_friends)
+        self.button.pack(side='left', pady=5)
 
         # Emoji button
-        self.button = ttk.Button( self.signin, text="╰(*°▽°*)╯", command=self.funnies_action)
-        self.button.pack(side='left',pady=5)
+        self.button = ttk.Button(
+            self.signin, text="╰(*°▽°*)╯", command=self.funnies_action)
+        self.button.pack(side='left', pady=5)
 
-        # Send Button 
-        try: 
+        # Send Button
+        try:
             button_icon = tk.PhotoImage(file='assets\\send_icon_smaller.png')
         except:
             button_icon = tk.PhotoImage(file='assets/send_icon_smaller.png')
 
-        self.button = ttk.Button( self.signin, image=button_icon, text="SEND", compound=tk.RIGHT, command=self.write)
+        self.button = ttk.Button(
+            self.signin, image=button_icon, text="SEND", compound=tk.RIGHT, command=self.write)
         # self.button.pack(fill='x', expand=True, pady=5)
         self.button.pack(fill='x', expand=True, pady=5)
         self.running = True
@@ -257,10 +266,9 @@ q: to leave the chat system\n"
             # print('gui loop')
             self.gui_login()
             # else:
-                # break
+            # break
             # self.gui_login_error()
         self.gui_chat()
-
 
     def user_bind(self, event):
         self.user_action()
@@ -274,7 +282,8 @@ q: to leave the chat system\n"
 
     def login_action(self):
         self.password = self.password_box.get()
-        self.console_input.append(self.username + '\n' + self.password) # no need for lock, append is thread safe
+        # no need for lock, append is thread safe
+        self.console_input.append(self.username + '\n' + self.password)
         while True:
             if self.get_trigger() == True:
                 self.login_root.destroy()
@@ -287,41 +296,45 @@ q: to leave the chat system\n"
         # import random
         # num = str(random.randint(1,5))
         if self.sm.get_state() == S_CHATTING:
-                title = 'Cannot Find Friends Now'
-                message = "You're talking to a friend right now! Pay attention"
-                showinfo(title, message)
+            title = 'Cannot Find Friends Now'
+            message = "You're talking to a friend right now! Pay attention"
+            showinfo(title, message)
         elif self.sm.get_state() == S_LOGGEDIN:
             text = 'find_friend'
-            self.console_input.append(text) # no need for lock, append is thread safe
+            # no need for lock, append is thread safe
+            self.console_input.append(text)
 
     def funnies_action(self):
         import random
-        # selet a random number from 1 to 5 
-        emoji_list = [ "ಥ_ಥ","╰(*°▽°*)╯","(❁´◡`❁)","(●'◡'●)",".｡.","o(≧▽≦)o" ]
+        # selet a random number from 1 to 5
+        emoji_list = ["ಥ_ಥ", "╰(*°▽°*)╯", "(❁´◡`❁)",
+                      "(●'◡'●)", ".｡.", "o(≧▽≦)o"]
         if self.sm.get_state() == S_CHATTING:
             emoji = random.choice(emoji_list)
             self.message = f"[{self.name}]{emoji}\n"
-            self.console_input.append(emoji) # no need for lock, append is thread safe
+            # no need for lock, append is thread safe
+            self.console_input.append(emoji)
             self.text_area.config(state='normal')
             self.text_area.insert('end', self.message)
             self.text_area.yview('end')
             self.text_area.config(state='disabled')
         elif self.sm.get_state() == S_LOGGEDIN:
-                title = 'Cannot Use This Function'
-                message = "Please try again when you're chatting"
-                showinfo(title, message)
+            title = 'Cannot Use This Function'
+            message = "Please try again when you're chatting"
+            showinfo(title, message)
 
     def sonnet_action(self):
         import random
-        # selet a random number from 1 to 5 
-        num = str(random.randint(1,5))
+        # selet a random number from 1 to 5
+        num = str(random.randint(1, 5))
         if self.sm.get_state() == S_CHATTING:
-                title = 'Cannot Find Sonnet Now'
-                message = "Please try again when you're not chatting"
-                showinfo(title, message)
+            title = 'Cannot Find Sonnet Now'
+            message = "Please try again when you're not chatting"
+            showinfo(title, message)
         elif self.sm.get_state() == S_LOGGEDIN:
             text = 'p' + num
-            self.console_input.append(text) # no need for lock, append is thread safe
+            # no need for lock, append is thread safe
+            self.console_input.append(text)
 
     def write_bind(self, event):
         self.write()
@@ -329,14 +342,17 @@ q: to leave the chat system\n"
     def exit_chat(self):
         if self.sm.get_state() == S_CHATTING:
             text = 'bye'
-            self.console_input.append(text) # no need for lock, append is thread safe
+            # no need for lock, append is thread safe
+            self.console_input.append(text)
         elif self.sm.get_state() == S_LOGGEDIN:
             text = 'q'
-            self.console_input.append(text) # no need for lock, append is thread safe
+            # no need for lock, append is thread safe
+            self.console_input.append(text)
 
     def write(self):
         text = self.user_box.get()
-        self.console_input.append(text) # no need for lock, append is thread safe
+        # no need for lock, append is thread safe
+        self.console_input.append(text)
         if self.sm.get_state() == S_CHATTING:
             if self.chat_start == True:
                 pass
@@ -350,7 +366,6 @@ q: to leave the chat system\n"
         self.text_area.yview('end')
         self.text_area.config(state='disabled')
         self.user_box.delete(0, 'end')
-
 
     def output(self):
         if len(self.system_msg) > 0:
@@ -371,7 +386,8 @@ q: to leave the chat system\n"
             text = sys.stdin.readline()[:-1]
             # print('LOGGED IN STATE', self.state)
             # print('TRIGGERED')
-            self.console_input.append(text) # no need for lock, append is thread safe
+            # no need for lock, append is thread safe
+            self.console_input.append(text)
 
     def print_instructions(self):
         self.system_msg += menu
@@ -393,9 +409,9 @@ q: to leave the chat system\n"
             time.sleep(CHAT_WAIT)
         self.quit()
 
-#==============================================================================
+# ==============================================================================
 # main processing loop
-#==============================================================================
+# ==============================================================================
     def proc(self):
         my_msg, peer_msg = self.get_msgs()
         self.system_msg += self.sm.proc(my_msg, peer_msg)
