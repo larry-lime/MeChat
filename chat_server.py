@@ -63,9 +63,9 @@ class Server:
             # Save the username and password to the file
             user_and_pass[name] = password
             pkl.dump(user_and_pass, open(
-                "username_and_passwords", "wb"))
+                "username_and_passwords.pk", "wb"))
             user_and_pass = pkl.load(
-                open("username_and_passwords", "rb"))
+                open("username_and_passwords.pk", "rb"))
             # Check for duplicate username
             self.check_duplicate_user(name, sock)
 
@@ -91,7 +91,7 @@ class Server:
         password = msg["password"]
         try:
             user_and_pass = pkl.load(
-                open("username_and_passwords", "rb"))
+                open("username_and_passwords.pk", "rb"))
         except Exception:
             user_and_pass = {}
         return user_and_pass, name, password
