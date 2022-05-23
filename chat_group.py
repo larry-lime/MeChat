@@ -60,17 +60,21 @@ class Group:
             self.chat_grps[group_key].append(me)
             self.members[me] = S_TALKING
         else:
-            # otherwise, create a new group
-            print(peer, "is idle as well")
-            self.grp_ever += 1
-            group_key = self.grp_ever
-            self.chat_grps[group_key] = []
-            self.chat_grps[group_key].append(me)
-            self.chat_grps[group_key].append(peer)
-            self.members[me] = S_TALKING
-            self.members[peer] = S_TALKING
+            self._extracted_from_connect_11(peer, me)
         print(self.list_me(me))
         return
+
+    # TODO Rename this here and in `connect`
+    def _extracted_from_connect_11(self, peer, me):
+        # otherwise, create a new group
+        print(peer, "is idle as well")
+        self.grp_ever += 1
+        group_key = self.grp_ever
+        self.chat_grps[group_key] = []
+        self.chat_grps[group_key].append(me)
+        self.chat_grps[group_key].append(peer)
+        self.members[me] = S_TALKING
+        self.members[peer] = S_TALKING
 
     def disconnect(self, me):
         # find myself in the group, quit
@@ -99,8 +103,7 @@ class Group:
     def list_me(self, me):
         # return a list, "me" followed by other peers in my group
         if me in self.members.keys():
-            my_list = []
-            my_list.append(me)
+            my_list = [me]
             in_group, group_key = self.find_group(me)
             if in_group == True:
                 for member in self.chat_grps[group_key]:
