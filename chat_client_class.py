@@ -320,11 +320,9 @@ class Client:
     def exit_chat(self):
         if self.sm.get_state() == S_CHATTING:
             text = 'bye'
-            # no need for lock, append is thread safe
             self.console_input.append(text)
         elif self.sm.get_state() == S_LOGGEDIN:
             text = 'q'
-            # no need for lock, append is thread safe
             self.console_input.append(text)
 
     def write(self):
