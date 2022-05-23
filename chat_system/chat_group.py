@@ -108,7 +108,6 @@ class Group:
                         my_list.append(member)
         return my_list
 
-
 if __name__ == "__main__":
     g = Group()
     g.join('a')
