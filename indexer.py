@@ -7,7 +7,6 @@ Created on Sat Jul  5 11:38:58 2014
 import pickle
 
 class Index:
-    # def __init__(self, name):
     def __init__(self, name):
         self.name = name
         self.msgs = [];
@@ -43,18 +42,13 @@ class Index:
                 self.index[wd].append(l)
                                      
     def search(self, term):
-        msgs = []
-        if (term in self.index.keys()):
-            indices = self.index[term]
-            msgs = [(i, self.msgs[i]) for i in indices]
-        return msgs
+        return [(i, self.msgs[i]) for i in self.index[term]] if (term in self.index.keys()) else []
 
 class PIndex(Index):
     def __init__(self, name):
         super().__init__(name)
-        roman_int_f = open('roman.txt.pk', 'rb')
-        self.int2roman = pickle.load(roman_int_f)
-        roman_int_f.close()
+        with open('roman.txt.pk', 'rb') as roman_int_f:
+            self.int2roman = pickle.load(roman_int_f)
         self.load_poems()
         
         # load poems
@@ -64,10 +58,9 @@ class PIndex(Index):
             self.add_msg_and_index(l.rstrip())
     
     def get_poem(self, p):
-        p_str = self.int2roman[p] + '.'
-        p_next_str = self.int2roman[p + 1] + '.'
-        temp = self.search(p_str)
-        if temp:
+        p_str = f'{self.int2roman[p]}.'
+        p_next_str = f'{self.int2roman[p + 1]}.'
+        if temp := self.search(p_str):
             [(go_line, m)] = temp
         else:
             return []
@@ -80,7 +73,6 @@ class PIndex(Index):
                 break
             poem.append(this_line)
             go_line += 1
-        # poem = "\n".join(poem)
         return poem
     
 if __name__ == "__main__":
