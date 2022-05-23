@@ -73,4 +73,4 @@ def myrecv(s):
 
 def text_proc(text, user):
     ctime = time.strftime('%d.%m.%y,%H:%M', time.localtime())
-    return('(' + ctime + ') ' + user + ' : ' + text) # message goes directly to screen
+    return f'({ctime}) {user} : {text}'
