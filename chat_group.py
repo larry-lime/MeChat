@@ -23,7 +23,6 @@ S_TALKING = 1
 
 
 class Group:
-
     def __init__(self):
         self.members = {}
         self.chat_grps = {}
@@ -102,8 +101,8 @@ class Group:
 
     def list_me(self, me):
         # return a list, "me" followed by other peers in my group
+        my_list = [me]
         if me in self.members.keys():
-            my_list = [me]
             in_group, group_key = self.find_group(me)
             if in_group == True:
                 for member in self.chat_grps[group_key]:
@@ -111,12 +110,13 @@ class Group:
                         my_list.append(member)
         return my_list
 
+
 if __name__ == "__main__":
     g = Group()
-    g.join('a')
-    g.join('b')
+    g.join("a")
+    g.join("b")
     print(g.list_all())
-    print(g.list_me('a'))
-    g.connect('a', 'b')
+    print(g.list_me("a"))
+    g.connect("a", "b")
     print(g.list_all())
-    print(g.list_me('a'))
+    print(g.list_me("a"))
