@@ -1,17 +1,14 @@
-"""
-Created on Tue Jul 22 00:47:05 2014
+# Local imports
+from chat_utils import *
+import chat_group as grp
+import indexer
 
-@author: alina, zzhang
-"""
-
+# Module imports
 import time
 import socket
 import select
-import indexer
 import json
 import pickle as pkl
-from chat_utils import *
-import chat_group as grp
 
 
 class Server:
@@ -39,13 +36,13 @@ class Server:
         self.all_sockets.append(sock)
 
     def login(self, sock):
-        # read the msg that should have login code plus username
         try:
             msg = json.loads(myrecv(sock))
             if len(msg) > 0:
                 if msg["action"] == "login":
                     # Add the username and password to user_and_pass
-                    user_and_pass, name, password = self.get_username_and_passwords(msg)
+                    user_and_pass, name, password = self.get_username_and_passwords(
+                        msg)
                     self.validate_user(user_and_pass, name, password, sock)
                 else:
                     print("wrong code received")
@@ -56,7 +53,6 @@ class Server:
             self.all_sockets.remove(sock)
 
     def validate_user(self, user_and_pass, name, password, sock):
-        # If user is new
         if name not in user_and_pass.keys():
             # Save the username and password to the file
             user_and_pass[name] = password
@@ -77,7 +73,8 @@ class Server:
         if self.group.is_member(name) != True:
             self.successful_login(sock, name)
         else:  # a client under this name has already logged in
-            mysend(sock, json.dumps({"action": "login", "status": "duplicate"}))
+            mysend(sock, json.dumps(
+                {"action": "login", "status": "duplicate"}))
             print(f"{name} duplicate login attempt")
 
     def get_username_and_passwords(self, msg):
@@ -110,8 +107,8 @@ class Server:
         del self.logged_name2sock[name]
         del self.logged_sock2name[sock]
         self.all_sockets.remove(sock)
-        self.group.leave(name)
         sock.close()
+        self.group.leave(name)
 
     # ==============================================================================
     # main command switchboard
@@ -131,7 +128,8 @@ class Server:
                     to_sock = self.logged_name2sock[to_name]
                     self.group.connect(from_name, to_name)
                     the_guys = self.group.list_me(from_name)
-                    msg = json.dumps({"action": "connect", "status": "success"})
+                    msg = json.dumps(
+                        {"action": "connect", "status": "success"})
                     for g in the_guys[1:]:
                         to_sock = self.logged_name2sock[g]
                         mysend(
@@ -145,7 +143,8 @@ class Server:
                             ),
                         )
                 else:
-                    msg = json.dumps({"action": "connect", "status": "no-user"})
+                    msg = json.dumps(
+                        {"action": "connect", "status": "no-user"})
                 mysend(from_sock, msg)
 
             elif msg["action"] == "exchange":
@@ -172,29 +171,34 @@ class Server:
             elif msg["action"] == "find_friends":
                 g = self.group
                 people = g.list_ppl()
-                mysend(from_sock, json.dumps({"action": "list", "results": people}))
+                mysend(from_sock, json.dumps(
+                    {"action": "list", "results": people}))
 
             elif msg["action"] == "list":
                 g = self.group
                 msg = g.list_all()
-                mysend(from_sock, json.dumps({"action": "list", "results": msg}))
+                mysend(from_sock, json.dumps(
+                    {"action": "list", "results": msg}))
 
             elif msg["action"] == "poem":
                 index = int(msg["target"])
                 poem = "".join(i + "\n" for i in self.sonnet.get_poem(index))
                 poem = poem.strip()
-                mysend(from_sock, json.dumps({"action": "poem", "results": poem}))
+                mysend(from_sock, json.dumps(
+                    {"action": "poem", "results": poem}))
 
             elif msg["action"] == "send_key":
                 key = msg["key"]
                 print("TEST:", key)
-                mysend(from_sock, json.dumps({"action": "send_key", "key": key}))
+                mysend(from_sock, json.dumps(
+                    {"action": "send_key", "key": key}))
 
             elif msg["action"] == "time":
                 # This is the actual time
                 ctime = time.strftime("%d.%m.%y,%H:%M", time.localtime())
                 # What mysend is is what is being sent from the sever to the client
-                mysend(from_sock, json.dumps({"action": "time", "results": ctime}))
+                mysend(from_sock, json.dumps(
+                    {"action": "time", "results": ctime}))
             elif msg["action"] == "search":
 
                 self.message_search(msg, from_sock)
@@ -215,7 +219,8 @@ class Server:
 
         search_rslt = "".join(str(l) + "\n" for l in result)
         print("search_rslt:\n", search_rslt)
-        mysend(from_sock, json.dumps({"action": "search", "results": search_rslt}))
+        mysend(from_sock, json.dumps(
+            {"action": "search", "results": search_rslt}))
 
     def send_message(self, from_sock, msg):
         from_name = self.logged_sock2name[from_sock]
@@ -230,7 +235,8 @@ class Server:
             mysend(
                 to_sock,
                 json.dumps(
-                    {"action": "exchange", "from": f"[{from_name}]", "message": my_msg}
+                    {"action": "exchange",
+                        "from": f"[{from_name}]", "message": my_msg}
                 ),
             )
 
