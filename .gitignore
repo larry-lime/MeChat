@@ -1,4 +1,4 @@
-.sessions/
+Session.vim
 __pycache__/
 *.idx
 username_and_passwords.pk
