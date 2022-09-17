@@ -46,7 +46,9 @@ class Client:
 
     def init_chat(self):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.connect(("0.tcp.jp.ngrok.io", 10560))
+        # self.socket.connect(("0.tcp.jp.ngrok.io", 10560))
+        # self.socket.connect(("127.0.0.1", 1112))
+        self.socket.connect(("localhost", 1112))
         self.sm = csm.ClientSM(self.socket)
         reading_thread = threading.Thread(target=self.gui_loop)
         reading_thread.daemon = True
@@ -126,6 +128,7 @@ class Client:
         self.user_box.pack(fill="x", expand=True)
         self.user_box.focus()
         self.user_box.bind("<Return>", self.user_bind)
+        self.user_box.bind("<Tab>", self.user_bind)
 
         # Password
         self.password = ttk.Label(self.signin, text="Password:")
@@ -228,7 +231,7 @@ class Client:
     def new_tk_window(self, dimensions: str, title: str):
         result = tk.Tk()
         result.geometry(dimensions)
-        result.resizable(False, False)
+        result.resizable(True, True)
         result.title(title)
         return result
 
