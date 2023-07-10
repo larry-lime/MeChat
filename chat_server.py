@@ -10,7 +10,7 @@ import select
 import json
 import pickle as pkl
 
-
+# ==============================================================================
 class Server:
     def __init__(self):
         self.new_clients = []  # list of new sockets of which the user id is not known
